@@ -11,7 +11,7 @@ Resolve the next best move - then prove it created momentum.
 - Exactly one-page cover letter
 - Interview thesis brief
 - First-120-days plan
-- Hard-objection analysis
+- Strategic Fit & Technical Credibility Plan
 - Entrepreneur Outcome Resolver
 - Executive interview questions
 - Generated PDF for every print-oriented artifact
