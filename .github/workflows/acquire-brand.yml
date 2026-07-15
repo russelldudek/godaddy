@@ -1,0 +1,135 @@
+name: Acquire official brand references
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/acquire-brand.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  acquire-brand:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests beautifulsoup4
+      - name: Capture official pages, logo and CSS evidence
+        run: |
+          python - <<'PY'
+          import json, re, urllib.parse
+          from collections import Counter
+          from pathlib import Path
+          import requests
+          from bs4 import BeautifulSoup
+
+          headers = {'User-Agent': 'Mozilla/5.0 (compatible; independent-candidate-research/1.0)'}
+          pages = [
+              'https://www.godaddy.com/',
+              'https://careers.godaddy.com/',
+              'https://careers.godaddy/jobs/director-applied-ml-ai-united-states?gh_jid=7764927003',
+          ]
+          out = Path('research'); out.mkdir(exist_ok=True)
+          brand = Path('assets/brand'); brand.mkdir(parents=True, exist_ok=True)
+          report = {'pages': [], 'css_urls': [], 'logo_candidates': [], 'fonts': {}, 'colors': {}}
+          css_texts = []
+          logo_urls = []
+
+          for url in pages:
+              try:
+                  response = requests.get(url, headers=headers, timeout=30)
+                  report['pages'].append({'url': url, 'status': response.status_code, 'final_url': response.url})
+                  if not response.ok: continue
+                  soup = BeautifulSoup(response.text, 'html.parser')
+                  for link in soup.find_all('link', href=True):
+                      rel = ' '.join(link.get('rel') or [])
+                      href = urllib.parse.urljoin(response.url, link['href'])
+                      if 'stylesheet' in rel:
+                          report['css_urls'].append(href)
+                      if 'icon' in rel and href:
+                          logo_urls.append(href)
+                  for tag in soup.find_all(['img','source'], src=True):
+                      src = urllib.parse.urljoin(response.url, tag.get('src'))
+                      blob = ' '.join([src, tag.get('alt',''), tag.get('class') and ' '.join(tag.get('class')) or ''])
+                      if re.search(r'logo|wordmark|godaddy|brand', blob, re.I):
+                          logo_urls.append(src)
+                  for tag in soup.find_all('meta', content=True):
+                      prop = (tag.get('property') or tag.get('name') or '')
+                      if prop in ('og:image','twitter:image'):
+                          logo_urls.append(urllib.parse.urljoin(response.url, tag['content']))
+              except Exception as exc:
+                  report['pages'].append({'url': url, 'error': str(exc)})
+
+          for css_url in list(dict.fromkeys(report['css_urls']))[:40]:
+              try:
+                  response = requests.get(css_url, headers=headers, timeout=30)
+                  if response.ok and len(response.text) < 5_000_000:
+                      css_texts.append((css_url, response.text))
+              except Exception:
+                  pass
+
+          all_css = '\n'.join(text for _, text in css_texts)
+          font_hits = re.findall(r'font-family\s*:\s*([^;}]+)', all_css, re.I)
+          for font, count in Counter(x.strip().strip('"\'') for x in font_hits).most_common(30):
+              report['fonts'][font] = count
+          color_hits = re.findall(r'#[0-9a-fA-F]{6}(?![0-9a-fA-F])', all_css)
+          for color, count in Counter(x.lower() for x in color_hits).most_common(40):
+              report['colors'][color] = count
+
+          downloaded = []
+          for i, url in enumerate(dict.fromkeys(logo_urls)):
+              if not url.startswith('http'): continue
+              try:
+                  response = requests.get(url, headers=headers, timeout=30)
+                  ctype = response.headers.get('content-type','').lower()
+                  if not response.ok or len(response.content) < 100: continue
+                  is_svg = 'svg' in ctype or url.lower().split('?')[0].endswith('.svg')
+                  is_png = 'png' in ctype or url.lower().split('?')[0].endswith('.png')
+                  is_webp = 'webp' in ctype or url.lower().split('?')[0].endswith('.webp')
+                  if not (is_svg or is_png or is_webp): continue
+                  ext = '.svg' if is_svg else '.png' if is_png else '.webp'
+                  safe = f'official-candidate-{i+1}{ext}'
+                  target = brand / safe
+                  target.write_bytes(response.content)
+                  downloaded.append({'source': url, 'path': str(target), 'content_type': ctype, 'bytes': len(response.content)})
+                  if is_svg and b'<svg' in response.content[:500].lower() and len(response.content) < 300000:
+                      text = response.content.decode('utf-8', errors='ignore')
+                      if re.search(r'godaddy|go-logo|wordmark', text, re.I) or len(downloaded) == 1:
+                          canonical = brand / 'godaddy-official.svg'
+                          canonical.write_bytes(response.content)
+                          report['selected_logo'] = {'source': url, 'path': str(canonical), 'reason': 'Official page-served SVG candidate retained unmodified.'}
+                          break
+              except Exception:
+                  continue
+          report['logo_candidates'] = downloaded
+
+          if 'selected_logo' not in report:
+              for item in downloaded:
+                  if item['path'].endswith('.png'):
+                      source = Path(item['path'])
+                      target = brand / 'godaddy-official.png'
+                      target.write_bytes(source.read_bytes())
+                      report['selected_logo'] = {'source': item['source'], 'path': str(target), 'reason': 'Official page-served raster candidate retained unmodified.'}
+                      break
+
+          (out / 'brand-scan.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
+          print(json.dumps(report, indent=2)[:12000])
+          PY
+      - name: Commit brand evidence
+        run: |
+          git config user.name "candidate-campaign-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add research/brand-scan.json assets/brand/
+          if git diff --cached --quiet; then
+            echo "No brand changes"
+          else
+            git commit -m "Capture official GoDaddy brand references [skip ci]"
+            git push
+          fi
