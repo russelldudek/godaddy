@@ -1,0 +1,331 @@
+{
+  "canonical_url": "https://careers.godaddy/jobs/director-applied-ml-ai-united-states?gh_jid=7764927003",
+  "job_id": "7764927003",
+  "retrieved_from": "https://boards-api.greenhouse.io/v1/boards/godaddy/jobs/7764927003",
+  "title": "Director Applied ML AI",
+  "location": "{\"name\": \"United States\"}",
+  "updated_at": "2026-06-26T18:39:23-04:00",
+  "departments": [
+    {
+      "id": 4010517003,
+      "name": "ManagerCore",
+      "child_ids": [],
+      "parent_id": null
+    }
+  ],
+  "offices": [
+    {
+      "id": 4028456003,
+      "name": "United States - Remote",
+      "location": "United States",
+      "child_ids": [],
+      "parent_id": 4004413003
+    }
+  ],
+  "attempts": [
+    {
+      "url": "https://boards-api.greenhouse.io/v1/boards/godaddy/jobs/7764927003",
+      "status": 200
+    }
+  ],
+  "raw_record": {
+    "absolute_url": "https://careers.godaddy/jobs?gh_jid=7764927003",
+    "data_compliance": [
+      {
+        "type": "gdpr",
+        "requires_consent": false,
+        "requires_processing_consent": false,
+        "requires_retention_consent": false,
+        "retention_period": null,
+        "demographic_data_consent_applies": false
+      }
+    ],
+    "education": "education_optional",
+    "internal_job_id": 5777761003,
+    "location": {
+      "name": "United States"
+    },
+    "metadata": [
+      {
+        "id": 4178754003,
+        "name": "Job Posting Department",
+        "value": "Non-Engineering Tech",
+        "value_type": "single_select"
+      },
+      {
+        "id": 4178755003,
+        "name": "Job Posting Team/Specialty",
+        "value": "Engineering",
+        "value_type": "single_select"
+      },
+      {
+        "id": 4043771003,
+        "name": "Country",
+        "value": "United States of America",
+        "value_type": "single_select"
+      },
+      {
+        "id": 4081785003,
+        "name": "Remote Job",
+        "value": true,
+        "value_type": "yes_no"
+      },
+      {
+        "id": 4183987003,
+        "name": "Additional Job Posting Locations",
+        "value": null,
+        "value_type": "long_text"
+      },
+      {
+        "id": 4169134003,
+        "name": "Primary Posting Location",
+        "value": "Remote - United States,,United States of America",
+        "value_type": "short_text"
+      },
+      {
+        "id": 4169135003,
+        "name": "Additional Posting Locations",
+        "value": null,
+        "value_type": "short_text"
+      },
+      {
+        "id": 13343439003,
+        "name": "GeoA Range Lower",
+        "value": {
+          "unit": "USD",
+          "amount": "197200.0"
+        },
+        "value_type": "currency"
+      },
+      {
+        "id": 13343468003,
+        "name": "GeoA Range Upper",
+        "value": {
+          "unit": "USD",
+          "amount": "295800.0"
+        },
+        "value_type": "currency"
+      },
+      {
+        "id": 8824535003,
+        "name": "GeoB Range Lower",
+        "value": {
+          "unit": "USD",
+          "amount": "185500.0"
+        },
+        "value_type": "currency"
+      },
+      {
+        "id": 8824550003,
+        "name": "GeoB Range Upper",
+        "value": {
+          "unit": "USD",
+          "amount": "278500.0"
+        },
+        "value_type": "currency"
+      },
+      {
+        "id": 13343469003,
+        "name": "GeoC Range Lower",
+        "value": {
+          "unit": "USD",
+          "amount": "165500.0"
+        },
+        "value_type": "currency"
+      },
+      {
+        "id": 13343484003,
+        "name": "GeoC Range Upper",
+        "value": {
+          "unit": "USD",
+          "amount": "248500.0"
+        },
+        "value_type": "currency"
+      },
+      {
+        "id": 8824461003,
+        "name": "GeoE Range Lower",
+        "value": {
+          "unit": "USD",
+          "amount": "215000.0"
+        },
+        "value_type": "currency"
+      },
+      {
+        "id": 8824491003,
+        "name": "GeoE Range Upper",
+        "value": {
+          "unit": "USD",
+          "amount": "323000.0"
+        },
+        "value_type": "currency"
+      },
+      {
+        "id": 22719917003,
+        "name": "GeoA Range Lower Hourly",
+        "value": null,
+        "value_type": "currency"
+      },
+      {
+        "id": 22719982003,
+        "name": "GeoA Range Upper Hourly",
+        "value": null,
+        "value_type": "currency"
+      },
+      {
+        "id": 22719983003,
+        "name": "GeoB Range Lower Hourly",
+        "value": null,
+        "value_type": "currency"
+      },
+      {
+        "id": 22719984003,
+        "name": "GeoB Range Upper Hourly",
+        "value": null,
+        "value_type": "currency"
+      },
+      {
+        "id": 22720000003,
+        "name": "GeoC Range Lower Hourly",
+        "value": null,
+        "value_type": "currency"
+      },
+      {
+        "id": 22720015003,
+        "name": "GeoC Range Upper Hourly",
+        "value": null,
+        "value_type": "currency"
+      },
+      {
+        "id": 22720017003,
+        "name": "GeoE Range Lower Hourly",
+        "value": null,
+        "value_type": "currency"
+      },
+      {
+        "id": 22720018003,
+        "name": "GeoE Range Upper Hourly",
+        "value": null,
+        "value_type": "currency"
+      },
+      {
+        "id": 38444584003,
+        "name": "Geo A Salary Currency Range",
+        "value": {
+          "unit": "USD",
+          "max_value": "295800.0",
+          "min_value": "197200.0"
+        },
+        "value_type": "currency_range"
+      },
+      {
+        "id": 38444585003,
+        "name": "Geo B Salary Currency Range",
+        "value": {
+          "unit": "USD",
+          "max_value": "278500.0",
+          "min_value": "185500.0"
+        },
+        "value_type": "currency_range"
+      },
+      {
+        "id": 38444608003,
+        "name": "Geo C Salary Currency Range",
+        "value": {
+          "unit": "USD",
+          "max_value": "248500.0",
+          "min_value": "165500.0"
+        },
+        "value_type": "currency_range"
+      },
+      {
+        "id": 38444609003,
+        "name": "Geo E Salary Currency Range",
+        "value": {
+          "unit": "USD",
+          "max_value": "323000.0",
+          "min_value": "215000.0"
+        },
+        "value_type": "currency_range"
+      },
+      {
+        "id": 38445020003,
+        "name": "Geo A Hourly Currency Range",
+        "value": null,
+        "value_type": "currency_range"
+      },
+      {
+        "id": 38445021003,
+        "name": "Geo B Hourly Currency Range",
+        "value": null,
+        "value_type": "currency_range"
+      },
+      {
+        "id": 38445022003,
+        "name": "Geo C Hourly Currency Range",
+        "value": null,
+        "value_type": "currency_range"
+      },
+      {
+        "id": 38445038003,
+        "name": "Geo E Hourly Currency Range",
+        "value": null,
+        "value_type": "currency_range"
+      },
+      {
+        "id": 17958670003,
+        "name": "Is this a US PERM/Immigration requisition?",
+        "value": null,
+        "value_type": "single_select"
+      },
+      {
+        "id": 24574593003,
+        "name": "HerKey Skills for Job Postings (INDIA JOBS ONLY)",
+        "value": null,
+        "value_type": "long_text"
+      },
+      {
+        "id": 24790415003,
+        "name": "HerKey Minimum Years of Experience (INDIA JOBS ONLY)",
+        "value": null,
+        "value_type": "number"
+      },
+      {
+        "id": 24833529003,
+        "name": "HerKey Maximum Years of Experience (INDIA JOBS ONLY)",
+        "value": null,
+        "value_type": "number"
+      }
+    ],
+    "id": 7764927003,
+    "updated_at": "2026-06-26T18:39:23-04:00",
+    "requisition_id": "R023713",
+    "title": "Director Applied ML AI",
+    "company_name": "GoDaddy",
+    "first_published": "2026-06-11T15:07:57-04:00",
+    "language": "en",
+    "application_deadline": null,
+    "content": "&lt;p&gt;&lt;strong&gt;Location Details:&amp;nbsp;&lt;/strong&gt;United States, Remote&lt;/p&gt;\n&lt;p&gt;At GoDaddy the future of work looks different for each team. Some teams work in the office full-time, others have a hybrid arrangement (they work remotely some days and in the office some days) and some work entirely remotely.&lt;/p&gt;\n&lt;p&gt;This position may be a hybrid or fully remote position, as decided by your manager. If designated as hybrid, you’ll divide your time between working remotely from your home and an office location, so you should live within commuting distance. If designated as remote, you’ll be working remotely from your home and may occasionally visit a GoDaddy office to meet with your team for events or meetings. Your hiring manager can share more about this role’s hybrid or remote designation.&lt;/p&gt;\n&lt;p&gt;This position is not eligible to be performed in Alaska, Mississippi, North Dakota, or the Virgin Islands.&lt;/p&gt;\n&lt;p&gt;GoDaddy is not currently considering candidates for this role in California, Seattle, or NYC.&lt;/p&gt;\n&lt;p&gt;&lt;strong&gt;&amp;nbsp;&lt;/strong&gt;&lt;strong&gt;Join Our Team&lt;/strong&gt;&lt;/p&gt;\n&lt;p&gt;We are seeking a Director of AI/ML to architect, define, and drive GoDaddy&#39;s three-year strategic roadmap for Generative AI and Machine Learning solutions, focused on personalized customer experiences and outcomes. This leader will deliver the latest Agentic AI and sophisticated ML techniques to craft, integrate, and scale personalized&amp;nbsp;applications globally.&lt;/p&gt;\n&lt;p&gt;If you are driven by deploying AI/ML at enterprise scale, excel in showcasing innovative multi-functional system integrations, and bring experience delivering global intelligent, adaptive solutions that create exceptional value for customers and the business, we invite you to join our mission.&lt;/p&gt;\n&lt;p&gt;&lt;strong&gt;&amp;nbsp;&lt;/strong&gt;&lt;strong&gt;What you&#39;ll get to do...&lt;/strong&gt;&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;Strategic Vision and Roadmap: Develop and champion our ambitious vision for AI/ML applications, with clear landmarks to showcase and accelerate global customer growth&lt;/li&gt;\n&lt;li&gt;Agentic AI Leadership: Identify and operationalize opportunities to demonstrate Agentic AI - AI agents that autonomously perceive, decide, and act, to create adaptive, intelligent systems that address evolving customer needs&lt;/li&gt;\n&lt;li&gt;End-to-End System Integration: Own the design and implementation of detailed, robust AI/ML pipelines, ensuring reliable data ingestion, model training/deployment, and real-time application across platforms and geographies&lt;/li&gt;\n&lt;li&gt;Scalable Global Solutions and Rapid Experimentation: Architect AI/ML systems with scalability at the core while enabling rapid experimentation, iterative development, and continuous learning - ensuring consistent application performance, governance, and compliance across diverse regions and multiple customer bases&lt;/li&gt;\n&lt;li&gt;Multi-functional Collaboration: Partner with engineering, product, data analytics, and domain teams to transform vision into deliverable products, championing methodologies for experimentation, measurement, and iteration&lt;/li&gt;\n&lt;li&gt;Innovation and Research: Stay at the forefront of AI/ML and Agentic AI advancements, identifying new technologies and propositions to influence&amp;nbsp;our roadmap and maintain GoDaddy&#39;s competitive edge&lt;/li&gt;\n&lt;li&gt;Mentoring and Team Development: Develop, inspire, and mentor high-performing, decisive AI/ML teams&lt;/li&gt;\n&lt;/ul&gt;\n&lt;p&gt;&lt;strong&gt;Your experience should include...&lt;/strong&gt;&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;8+ years’ validated experience in AI/ML leadership roles, in an agile Technology/SaaS business, with a portfolio of large-scale AI/ML solutions, deployed globally with deep knowledge of industry-standard ML tools, frameworks, and cloud platforms&lt;/li&gt;\n&lt;li&gt;Familiarity&amp;nbsp;with Claude Code, both in direct use as well as in team adoption. Confirmed expertise in building Agentic AI applications for customer-facing use cases&lt;/li&gt;\n&lt;li&gt;Validated background in designing, integrating, and scaling end-to-end AI/ML systems solving&amp;nbsp;recommendations, personalization and related problem areas&lt;/li&gt;\n&lt;li&gt;Experience working in customer-facing domains with a strong product mindset. Able to think strategically and implement tactically in a multifaceted, fast-paced environment&lt;/li&gt;\n&lt;li&gt;Exceptional leadership, communication, and collaborative management skills with a track record of building, leading and mentoring high-performing technical teams&lt;/li&gt;\n&lt;/ul&gt;\n&lt;p&gt;&lt;strong&gt;You might also have...&lt;/strong&gt;&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;Advanced degree in Computer Science, Machine Learning or Artificial Intelligence&lt;/li&gt;\n&lt;/ul&gt;\n&lt;p&gt;&amp;nbsp;&lt;/p&gt;\n&lt;p&gt;&lt;em&gt;We encourage you to apply even if your experience or skillset doesn’t align perfectly with every requirement. We value a wide range of backgrounds and transferable skills, and we are excited to support learning and growth.&lt;br&gt;&lt;/em&gt;&lt;br&gt;&lt;strong&gt;About us...&amp;nbsp; &lt;/strong&gt;&lt;span data-contrast=&quot;auto&quot;&gt;GoDaddy is empowering everyday entrepreneurs around the world by providing the help and tools to succeed online, &lt;/span&gt;&lt;span data-contrast=&quot;none&quot;&gt;making opportunity more inclusive for all.&lt;/span&gt;&lt;span data-contrast=&quot;auto&quot;&gt; GoDaddy is the place people come to name their idea, build a professional website, attract customers, sell their products and services, and manage their work. Our mission is to give our customers the tools, insights, and people to transform their ideas and personal initiative into success. To learn more about the company, visit &lt;/span&gt;&lt;a href=&quot;https://nam10.safelinks.protection.outlook.com/?url=https%3A%2F%2Faboutus.godaddy.net%2Fabout-us%2Foverview%2Fdefault.aspx&amp;amp;data=05%7C01%7Cklilas%40godaddy.com%7C4a7c273441f14a72548908dab30d54f3%7Cd5f1622b14a345a6b069003f8dc4851f%7C0%7C0%7C638019167147789183%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;amp;sdata=JKqNxY8z5E%2BjfKXCtVVYGLmGXuv31qCpLmWP960VLzo%3D&amp;amp;reserved=0&quot;&gt;&lt;span data-contrast=&quot;none&quot;&gt;About Us&lt;/span&gt;&lt;/a&gt;&lt;span data-contrast=&quot;auto&quot;&gt;.&lt;/span&gt;&lt;span data-ccp-props=&quot;{&amp;quot;134233117&amp;quot;:false,&amp;quot;134233118&amp;quot;:false,&amp;quot;335559738&amp;quot;:0,&amp;quot;335559739&amp;quot;:0}&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;/p&gt;\n&lt;p&gt;&lt;span data-contrast=&quot;auto&quot;&gt;At GoDaddy, we know diverse teams build better products—period. Our people and culture reflect and celebrate that sense of diversity and inclusion in ideas, experiences and perspectives. But we also know that’s not enough to build true equity and belonging in our communities. That’s why we prioritize integrating diversity, equity, inclusion and belonging principles into the core of how we work every day—focusing not only on our employee experience, but also our customer experience and operations. It’s the best way to serve our mission of empowering entrepreneurs everywhere, and making opportunity more inclusive for all. To read more about these commitments, as well as our representation and pay equity data, check out our Diversity and Pay Parity annual report which can be&amp;nbsp;&lt;/span&gt;&lt;span data-contrast=&quot;auto&quot;&gt;found on our &lt;/span&gt;&lt;a href=&quot;https://careers.godaddy/diversity&quot; target=&quot;_blank&quot;&gt;&lt;span data-contrast=&quot;auto&quot;&gt;Diversity Careers page&lt;/span&gt;&lt;/a&gt;&lt;span data-contrast=&quot;auto&quot;&gt;.&lt;/span&gt;&lt;/p&gt;\n&lt;p&gt;&lt;span data-contrast=&quot;auto&quot;&gt;We also embrace our diverse culture and offer a range of Employee Resource Groups (&lt;a href=&quot;https://careers.godaddy/culture&quot; target=&quot;_blank&quot;&gt;Culture&lt;/a&gt;). Have a side hustle? No problem. We love entrepreneurs! Most importantly, come as you are and make your own way.&amp;nbsp;&lt;/span&gt;&lt;/p&gt;\n&lt;p&gt;&lt;em&gt;GoDaddy is proud to be an equal opportunity employer. GoDaddy will consider for employment qualified applicants with criminal histories in a manner consistent with local and federal requirements.&lt;/em&gt; &lt;em&gt;&lt;span data-contrast=&quot;none&quot;&gt;Refer to our full&lt;/span&gt;&lt;/em&gt; &lt;em&gt;&lt;a href=&quot;https://www.godaddy.com/legal/agreements/equal-opportunity-employment-statement&quot;&gt;EEO policy.&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;\n&lt;p&gt;Our recruiting team is available to assist you in completing your application. If they could be helpful, please reach out to &lt;a href=&quot;mailto:myrecruiter@godaddy.com&quot;&gt;myrecruiter@godaddy.com&lt;/a&gt;.&amp;nbsp;&lt;/p&gt;\n&lt;p&gt;&lt;strong&gt;Colorado Residents:&lt;/strong&gt;&amp;nbsp;In any materials you submit, you may redact or remove age-identifying information such as age, date of birth, or dates of school attendance or graduation. You will not be penalized for redacting or removing this information.&lt;/p&gt;\n&lt;p&gt;&lt;strong&gt;GoDaddy doesn’t accept unsolicited resumes from recruiters or employment agencies.&lt;/strong&gt;&lt;/p&gt;&lt;div class=&quot;content-pay-transparency&quot;&gt;&lt;div class=&quot;pay-input&quot;&gt;&lt;div class=&quot;description&quot;&gt;&lt;p&gt;&lt;strong&gt;&lt;span data-contrast=&quot;auto&quot;&gt;Compensation &amp;amp; Benefits:&lt;/span&gt;&lt;/strong&gt;&lt;span data-ccp-props=&quot;{}&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;/p&gt;\n&lt;p&gt;&lt;strong&gt;&lt;span data-contrast=&quot;auto&quot;&gt;What We Offer:&lt;/span&gt;&lt;/strong&gt;&lt;span data-ccp-props=&quot;{}&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;/p&gt;\n&lt;p&gt;&lt;span data-contrast=&quot;auto&quot;&gt;Working at GoDaddy offers many benefits, including competitive pay, generous time off,&amp;nbsp;parental and wellness leave, healthcare,&amp;nbsp;retirement&amp;nbsp;savings program, and much more. Offerings vary by location.&lt;/span&gt;&lt;span data-ccp-props=&quot;{}&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;/p&gt;\n&lt;p&gt;&lt;span data-contrast=&quot;auto&quot;&gt;This&amp;nbsp;role is eligible for a comprehensive benefits package, which includes&amp;nbsp;medical, dental, and vision insurance, a 401(k)-retirement&amp;nbsp;plan, paid sick time, paid&amp;nbsp;flexible&amp;nbsp;time off, paid parental leave, life insurance, short- and long-term disability, AD&amp;amp;D insurance, mental health&amp;nbsp;or EAP programs, remote or hybrid work options,&amp;nbsp;paid&amp;nbsp;holidays, paid Wellness days, tuition assistance, adoption, surrogacy, and fertility benefits, dependent daycare and backup care benefits,&amp;nbsp;Employee&amp;nbsp;stock purchase plan, financial education and advice; and other benefits in accordance with GoDaddy’s benefit plans and applicable law.&lt;/span&gt;&lt;span data-ccp-props=&quot;{}&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;/p&gt;\n&lt;p&gt;&lt;span data-contrast=&quot;auto&quot;&gt;Actual compensation and&amp;nbsp;benefits&amp;nbsp;eligibility will be&amp;nbsp;determined&amp;nbsp;based on permissible, non-discriminatory factors such as skills, experience, and geographic location.&lt;/span&gt;&lt;span data-ccp-props=&quot;{}&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;/p&gt;\n&lt;p&gt;&lt;strong&gt;&lt;span data-contrast=&quot;auto&quot;&gt;Compensation:&lt;/span&gt;&lt;/strong&gt;&lt;span data-ccp-props=&quot;{}&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;/p&gt;\n&lt;p&gt;&lt;span data-contrast=&quot;auto&quot;&gt;The estimated pay ranges for this role are listed below. In addition to base pay, this role may be eligible for other forms of compensation, which may include a corporate bonus and/or equity awards, subject to the terms of applicable plans and individual eligibility.&lt;/span&gt;&lt;/p&gt;&lt;/div&gt;&lt;div class=&quot;title&quot;&gt;Bay Area (Santa Clara, San Francisco) and Los Angeles:&lt;/div&gt;&lt;div class=&quot;pay-range&quot;&gt;&lt;span&gt;$215,000&lt;/span&gt;&lt;span class=&quot;divider&quot;&gt;&amp;mdash;&lt;/span&gt;&lt;span&gt;$323,000 USD&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;pay-input&quot;&gt;&lt;div class=&quot;title&quot;&gt;Austin, D.C. Metro, CA (non-Bay Area), HI, IL, MA, NH, OR, VA, WA:&lt;/div&gt;&lt;div class=&quot;pay-range&quot;&gt;&lt;span&gt;$185,500&lt;/span&gt;&lt;span class=&quot;divider&quot;&gt;&amp;mdash;&lt;/span&gt;&lt;span&gt;$278,500 USD&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;pay-input&quot;&gt;&lt;div class=&quot;title&quot;&gt;New York City Metro, Kirkland/Seattle:&lt;/div&gt;&lt;div class=&quot;pay-range&quot;&gt;&lt;span&gt;$197,200&lt;/span&gt;&lt;span class=&quot;divider&quot;&gt;&amp;mdash;&lt;/span&gt;&lt;span&gt;$295,800 USD&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;pay-input&quot;&gt;&lt;div class=&quot;title&quot;&gt;All other US locations not previously listed:&lt;/div&gt;&lt;div class=&quot;pay-range&quot;&gt;&lt;span&gt;$165,500&lt;/span&gt;&lt;span class=&quot;divider&quot;&gt;&amp;mdash;&lt;/span&gt;&lt;span&gt;$248,500 USD&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;",
+    "departments": [
+      {
+        "id": 4010517003,
+        "name": "ManagerCore",
+        "child_ids": [],
+        "parent_id": null
+      }
+    ],
+    "offices": [
+      {
+        "id": 4028456003,
+        "name": "United States - Remote",
+        "location": "United States",
+        "child_ids": [],
+        "parent_id": 4004413003
+      }
+    ],
+    "ai_disclaimer": "<p>At GoDaddy, we&nbsp;use assistive AI&nbsp;tools&nbsp;to help identify how an applicant’s skills and experience align with the job-related criteria for the role.&nbsp;&nbsp;The tool&nbsp;does not make hiring decisions, automatically reject candidates, or evaluate personal characteristics unrelated to job qualifications, such as age, health, or other legally protected characteristics.&nbsp;&nbsp;The tool&nbsp;supports, but does not replace, our&nbsp;recruiters’&nbsp;and hiring managers’&nbsp;independent review and&nbsp;evaluation of applications.&nbsp;&nbsp;&nbsp;Details about the personal data we process as part of your application and your privacy rights are available in our Applicant Privacy Policy:&nbsp;<a href=\"https://www.godaddy.com/en/legal/agreements/applicant-privacy-notice\" target=\"_blank\">https://www.godaddy.com/en/legal/agreements/applicant-privacy-notice</a>&nbsp;&nbsp;</p>",
+    "include_ai_disclaimer": true,
+    "ai_opt_out_request_url": "http://app3.greenhouse.io/ai_opt_out_request/job_post/7764927003/ai_opt_out",
+    "_retrieved_from": "https://boards-api.greenhouse.io/v1/boards/godaddy/jobs/7764927003"
+  }
+}
