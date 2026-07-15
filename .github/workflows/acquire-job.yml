@@ -1,0 +1,126 @@
+name: Acquire public job posting
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/acquire-job.yml'
+      - 'research/job-request.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  acquire:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests beautifulsoup4
+      - name: Fetch and normalize posting
+        run: |
+          python - <<'PY'
+          import html, json, re
+          from pathlib import Path
+          import requests
+          from bs4 import BeautifulSoup
+
+          source_url = 'https://careers.godaddy/jobs/director-applied-ml-ai-united-states?gh_jid=7764927003'
+          job_id = '7764927003'
+          headers = {'User-Agent': 'Mozilla/5.0 (compatible; candidate-research/1.0)'}
+          attempts = []
+          record = None
+
+          for board in ('godaddy', 'godaddyinc', 'godaddycareers'):
+              url = f'https://boards-api.greenhouse.io/v1/boards/{board}/jobs/{job_id}'
+              try:
+                  response = requests.get(url, headers=headers, timeout=30)
+                  attempts.append({'url': url, 'status': response.status_code})
+                  if response.ok and response.headers.get('content-type', '').startswith('application/json'):
+                      payload = response.json()
+                      if payload.get('title'):
+                          record = payload
+                          record['_retrieved_from'] = url
+                          break
+              except Exception as exc:
+                  attempts.append({'url': url, 'error': str(exc)})
+
+          page_html = ''
+          if record is None:
+              response = requests.get(source_url, headers=headers, timeout=30)
+              attempts.append({'url': source_url, 'status': response.status_code})
+              response.raise_for_status()
+              page_html = response.text
+              soup = BeautifulSoup(page_html, 'html.parser')
+              for script in soup.find_all('script', type='application/ld+json'):
+                  try:
+                      data = json.loads(script.get_text(strip=True))
+                  except Exception:
+                      continue
+                  candidates = data if isinstance(data, list) else [data]
+                  for candidate in candidates:
+                      if isinstance(candidate, dict) and candidate.get('@type') == 'JobPosting':
+                          record = {
+                              'title': candidate.get('title'),
+                              'location': candidate.get('jobLocation'),
+                              'content': candidate.get('description', ''),
+                              'updated_at': candidate.get('datePosted'),
+                              'absolute_url': source_url,
+                              '_retrieved_from': source_url,
+                              '_json_ld': candidate,
+                          }
+                          break
+                  if record:
+                      break
+              if record is None:
+                  main = soup.find('main') or soup.body or soup
+                  record = {
+                      'title': 'Director, Applied ML/AI',
+                      'location': 'United States',
+                      'content': str(main),
+                      'absolute_url': source_url,
+                      '_retrieved_from': source_url,
+                  }
+
+          raw_content = record.get('content') or record.get('description') or ''
+          text = BeautifulSoup(html.unescape(raw_content), 'html.parser').get_text('\n')
+          text = re.sub(r'\n\s*\n+', '\n\n', text).strip()
+          location = record.get('location')
+          if isinstance(location, dict) or isinstance(location, list):
+              location = json.dumps(location, ensure_ascii=False)
+
+          out = Path('research')
+          out.mkdir(exist_ok=True)
+          source = {
+              'canonical_url': source_url,
+              'job_id': job_id,
+              'retrieved_from': record.get('_retrieved_from'),
+              'title': record.get('title'),
+              'location': location,
+              'updated_at': record.get('updated_at'),
+              'departments': record.get('departments'),
+              'offices': record.get('offices'),
+              'attempts': attempts,
+              'raw_record': record,
+          }
+          (out / 'job-posting-source.json').write_text(json.dumps(source, indent=2, ensure_ascii=False), encoding='utf-8')
+          markdown = f'''# GoDaddy Director, Applied ML/AI — Public Job Posting\n\nCanonical posting: {source_url}\n\nRetrieved from: {record.get('_retrieved_from')}\n\n## Title\n\n{record.get('title') or 'Director, Applied ML/AI'}\n\n## Location\n\n{location or 'United States'}\n\n## Posting text\n\n{text}\n'''
+          (out / 'job-posting.md').write_text(markdown, encoding='utf-8')
+          print(markdown[:5000])
+          PY
+      - name: Commit normalized posting
+        run: |
+          git config user.name "candidate-campaign-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add research/job-posting-source.json research/job-posting.md
+          if git diff --cached --quiet; then
+            echo "No posting changes"
+          else
+            git commit -m "Capture public GoDaddy job posting [skip ci]"
+            git push
+          fi
