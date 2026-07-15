@@ -1,20 +1,114 @@
+/* 2026-07-15 visual integrity system */
 :root{
-  --gd-teal-text:#075a5e;
-  --gd-on-teal:#ffffff;
-  --gd-on-deep:#f4fffb;
+  color-scheme:light;
+  --ui-ink:#22383c;
+  --ui-ink-strong:#111f22;
+  --ui-teal-text:#075f64;
+  --ui-on-dark:#f3fffb;
+  --ui-on-dark-soft:#e2f7f2;
+  --ui-resolver:#0d3d43;
+  --ui-resolver-row:#123d43;
+  --ui-resolver-active:#166269;
 }
-.eyebrow{color:var(--gd-teal-text)}
-.teal .eyebrow,.teal .evidence .org{color:var(--gd-on-teal)!important;font-weight:800}
-.cta .eyebrow{color:var(--gd-deep)!important}
-.resolver .eyebrow,.dark .section-head .eyebrow{color:var(--gd-on-deep)!important}
-.record{border:1px solid rgba(255,255,255,.28);box-shadow:inset 4px 0 0 rgba(65,219,0,.72)}
-.record-val{color:#fff;font-weight:600}
-.record-conf,.resolver-foot{color:var(--gd-on-deep);font-weight:700}
-.scenario-btn{border-color:rgba(255,255,255,.72)}
+
+/* Light surfaces: dark text is the default, including cards nested inside dark sections. */
+body{color:var(--ui-ink)}
+.paper,
+.tension,
+.contract-field,
+.score-panel,
+.phase,
+.question,
+.objection-box,
+.sheet,
+.callout,
+.mini-record,
+.compact-table th,
+.compact-table td{color:var(--ui-ink)}
+.paper h1,.paper h2,.paper h3,
+.tension strong,
+.contract-field b,
+.score-panel h3,
+.phase h3,
+.question strong,
+.objection-box .truth,
+.sheet h1,.sheet h2,.sheet h3{color:var(--ui-ink-strong)}
+.paper p,.paper li,.paper small,
+.tension p,.tension .cost,
+.contract-field p,
+.score-panel p,.score-panel .metric,.score-panel small,
+.phase li,
+.question p,
+.objection-box p,.objection-box li,
+.sheet p,.sheet li,.sheet td,.sheet th,
+.callout p,.mini-record span,
+.doc-subtitle,.contact,.page-foot,.role-line span{color:var(--ui-ink)!important}
+.eyebrow,.tension .vs,.phase .days,.question::before,
+.contract-field::before,.doc-section h2,.doc-role,.mini-record b{color:var(--ui-teal-text)!important}
+.cost{color:#34484b!important}
+.score-tab{color:var(--ui-ink-strong)!important}
+.score-tab[aria-selected="true"]{background:var(--gd-deep)!important;color:#fff!important}
+
+/* Dark section copy stays light, while nested white cards remain dark via the rules above. */
+.dark{color:var(--ui-on-dark)}
+.dark > .section-inner > .section-head h2,
+.dark > .section-inner > .section-head p,
+.dark > .section-inner > .verdict{color:var(--ui-on-dark)!important}
+.dark > .section-inner > .section-head .eyebrow{color:var(--ui-on-dark-soft)!important}
+.dark .contract-field,.dark .contract-field *{color:var(--ui-ink)!important}
+.dark .contract-field::before{color:var(--ui-teal-text)!important}
+.dark .objection-box,.dark .objection-box *{color:var(--ui-ink)!important}
+.dark .objection-box .eyebrow{color:var(--ui-teal-text)!important}
+
+/* Teal evidence section. */
+.teal{color:var(--ui-on-dark)}
+.teal > .section-inner > .section-head h2,
+.teal > .section-inner > .section-head p,
+.teal > .section-inner > .section-head .eyebrow,
+.teal .evidence h3,
+.teal .evidence p,
+.teal .evidence .org,
+.teal .proof-tag{color:var(--ui-on-dark)!important}
+.teal .proof-tag{border-color:rgba(255,255,255,.72)!important}
+
+/* Resolver: no pale text on light animation states. */
+.resolver{background:var(--ui-resolver)!important;color:var(--ui-on-dark)!important;box-shadow:0 28px 70px rgba(0,66,73,.28)}
+.resolver-top{border-bottom-color:rgba(255,255,255,.32)!important}
+.resolver .eyebrow{color:#ddfff1!important}
+.resolver-title{color:#fff!important}
+.query{background:#08373d!important;color:#f3fffb!important;border:1px solid rgba(255,255,255,.2)}
+.record{background:var(--ui-resolver-row)!important;border:1px solid rgba(255,255,255,.32)!important;box-shadow:inset 5px 0 0 rgba(140,227,83,.94)!important;animation:resolve 5.2s ease-in-out infinite}
+.record-key{color:#c8ff8a!important}
+.record-val{color:#fff!important;font-weight:700!important}
+.record-conf,.resolver-foot{color:#e6faf5!important;font-weight:700!important}
+.scenario-btn{border-color:rgba(255,255,255,.8)!important;color:#fff!important;background:rgba(255,255,255,.06)!important}
+.scenario-btn[aria-pressed="true"]{background:var(--gd-yellow)!important;color:#111!important;border-color:var(--gd-yellow)!important}
+
+/* CTA, documents, and footer. */
+.cta,.cta h2,.cta p{color:var(--ui-ink-strong)!important}
+.cta .eyebrow{color:var(--ui-ink-strong)!important}
+.button,.doc-actions a,.doc-actions button{color:#fff!important}
+.button.secondary,.doc-actions .light{color:#111!important}
+.sheet .callout{background:#eef7f7!important}
+.sheet .warning{background:#fff3f3!important}
+.footer,.footer *{color:#fff!important}
 .footer img,.footer svg{display:none!important}
+
 @keyframes resolve{
-  0%,10%,100%{transform:translateX(0);background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.28);box-shadow:inset 4px 0 0 rgba(65,219,0,.72)}
-  20%,42%{transform:translateX(6px);background:rgba(0,164,166,.20);border-color:rgba(255,255,255,.78);box-shadow:inset 7px 0 0 var(--gd-lime),0 0 0 2px rgba(65,219,0,.22),0 10px 24px rgba(0,0,0,.18)}
+  0%,10%,100%{
+    transform:translateX(0);
+    background:var(--ui-resolver-row);
+    border-color:rgba(255,255,255,.32);
+    box-shadow:inset 5px 0 0 rgba(140,227,83,.94);
+  }
+  20%,42%{
+    transform:translateX(6px);
+    background:var(--ui-resolver-active);
+    border-color:rgba(255,255,255,.86);
+    box-shadow:inset 7px 0 0 var(--gd-lime),0 0 0 2px rgba(140,227,83,.24),0 10px 24px rgba(0,0,0,.18);
+  }
   55%{transform:translateX(0)}
 }
-@media (prefers-reduced-motion:reduce){.record{border-color:rgba(255,255,255,.32);box-shadow:inset 4px 0 0 rgba(65,219,0,.8)}}
+@media (prefers-reduced-motion:reduce){
+  .record{animation:none!important;transform:none!important;background:var(--ui-resolver-row)!important}
+}
