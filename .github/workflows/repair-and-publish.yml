@@ -35,6 +35,19 @@ jobs:
           sudo apt-get install -y poppler-utils
           python -m pip install --upgrade pip weasyprint
 
+      - name: Normalize the migration source
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('scripts/repair_campaign.py')
+          text = path.read_text()
+          text = text.replace(
+              '<div class="eyebrow" style="color:#bfe9e4">The hard objection</div>',
+              '<div class="eyebrow">The hard objection</div>',
+          )
+          path.write_text(text)
+          PY
+
       - name: Rebuild direct static campaign and PDFs
         run: python scripts/repair_campaign.py
 
@@ -46,6 +59,7 @@ jobs:
             docs/Russell-Dudek-GoDaddy-Cover-Letter.pdf
             docs/Russell-Dudek-GoDaddy-Interview-Thesis-Brief.pdf
             docs/Russell-Dudek-GoDaddy-First-120-Days.pdf
+            docs/Russell-Dudek-GoDaddy-Strategic-Fit-Technical-Credibility-Plan.pdf
             docs/Russell-Dudek-GoDaddy-Hard-Objection-Analysis.pdf
             docs/Russell-Dudek-GoDaddy-Entrepreneur-Outcome-Resolver.pdf
             docs/Russell-Dudek-GoDaddy-Executive-Interview-Questions.pdf
@@ -56,6 +70,7 @@ jobs:
           done
           test "$(pdfinfo docs/Russell-Dudek-GoDaddy-Resume.pdf | awk '/^Pages:/ {print $2}')" = "2"
           test "$(pdfinfo docs/Russell-Dudek-GoDaddy-Cover-Letter.pdf | awk '/^Pages:/ {print $2}')" = "1"
+          test "$(pdfinfo docs/Russell-Dudek-GoDaddy-Strategic-Fit-Technical-Credibility-Plan.pdf | awk '/^Pages:/ {print $2}')" = "2"
 
       - name: Commit complete campaign and downloadable documents
         run: |
@@ -70,6 +85,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No campaign changes were required."
           else
-            git commit -m "Publish direct campaign files and downloadable PDFs"
+            git commit -m "Publish strategic fit campaign and documents"
             git push origin HEAD:main
           fi
