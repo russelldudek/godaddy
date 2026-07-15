@@ -1,1 +1,1 @@
-PDF downloads are being repaired directly on main.
+Strategic Fit & Technical Credibility Plan approved for publication. Rebuild the direct site and all downloadable documents from the evidence-grounded candidate narrative.
