@@ -1,4 +1,4 @@
-name: Repair and publish campaign source
+name: Repair and publish complete campaign
 
 on:
   push:
@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/repair-and-publish.yml'
       - 'scripts/repair_campaign.py'
+      - 'docs-download-readme.txt'
   workflow_dispatch:
 
 permissions:
@@ -27,15 +28,36 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-          cache: pip
 
-      - name: Install PDF renderer
-        run: python -m pip install --upgrade weasyprint
+      - name: Install document renderer and PDF verifier
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+          python -m pip install --upgrade pip weasyprint
 
-      - name: Rebuild campaign and PDFs
+      - name: Rebuild direct static campaign and PDFs
         run: python scripts/repair_campaign.py
 
-      - name: Commit complete static campaign
+      - name: Verify all downloadable PDFs
+        run: |
+          set -euo pipefail
+          files=(
+            docs/Russell-Dudek-GoDaddy-Resume.pdf
+            docs/Russell-Dudek-GoDaddy-Cover-Letter.pdf
+            docs/Russell-Dudek-GoDaddy-Interview-Thesis-Brief.pdf
+            docs/Russell-Dudek-GoDaddy-First-120-Days.pdf
+            docs/Russell-Dudek-GoDaddy-Hard-Objection-Analysis.pdf
+            docs/Russell-Dudek-GoDaddy-Entrepreneur-Outcome-Resolver.pdf
+            docs/Russell-Dudek-GoDaddy-Executive-Interview-Questions.pdf
+          )
+          for file in "${files[@]}"; do
+            test -s "$file"
+            pdfinfo "$file" >/dev/null
+          done
+          test "$(pdfinfo docs/Russell-Dudek-GoDaddy-Resume.pdf | awk '/^Pages:/ {print $2}')" = "2"
+          test "$(pdfinfo docs/Russell-Dudek-GoDaddy-Cover-Letter.pdf | awk '/^Pages:/ {print $2}')" = "1"
+
+      - name: Commit complete campaign and downloadable documents
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -48,6 +70,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No campaign changes were required."
           else
-            git commit -m "Publish repaired campaign source and documents"
+            git commit -m "Publish direct campaign files and downloadable PDFs"
             git push origin HEAD:main
           fi
