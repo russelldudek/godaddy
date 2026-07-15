@@ -1,210 +1,33 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Russell Dudek — GoDaddy Candidate Vision</title><meta name="description" content="Independent candidate vision for GoDaddy Director, Applied ML/AI."><style>:root{color-scheme:light}*{box-sizing:border-box}body{margin:0;background:#004249;color:#fff;font:16px/1.5 Arial,sans-serif;display:grid;min-height:100vh;place-items:center}.loader{width:min(680px,90vw);padding:40px;border:1px solid #00a4a6;border-radius:24px;background:#111;box-shadow:0 24px 70px #002b2f}.mark{font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#9bf24d}.loader h1{font-size:clamp(34px,7vw,68px);line-height:.95;margin:18px 0}.bar{height:8px;background:#263b3d;border-radius:99px;overflow:hidden}.bar:after{content:'';display:block;width:42%;height:100%;background:#00a4a6;animation:load 1.2s ease-in-out infinite alternate}.status{color:#e6faf5;margin-top:14px}.error{color:#ffb8b8;white-space:pre-wrap}@keyframes load{to{transform:translateX(138%)}}@media(prefers-reduced-motion:reduce){.bar:after{animation:none;width:100%}}</style></head><body><main class="loader" aria-live="polite"><div class="mark">Russell Dudek / Candidate Vision</div><h1>Resolving the campaign.</h1><div class="bar" aria-hidden="true"></div><p class="status" id="status">Loading the verified artifact set…</p></main><script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script><script>
-const parts=['source-00','source-01','source-02','source-03','source-04'];
-const routePdf={
- 'resume.html':'docs/Russell-Dudek-GoDaddy-Resume.pdf',
- 'cover-letter.html':'docs/Russell-Dudek-GoDaddy-Cover-Letter.pdf',
- 'interview-brief.html':'docs/Russell-Dudek-GoDaddy-Interview-Thesis-Brief.pdf',
- '120-day-plan.html':'docs/Russell-Dudek-GoDaddy-First-120-Days.pdf',
- 'hard-objection.html':'docs/Russell-Dudek-GoDaddy-Hard-Objection-Analysis.pdf',
- 'outcome-resolver.html':'docs/Russell-Dudek-GoDaddy-Entrepreneur-Outcome-Resolver.pdf',
- 'executive-questions.html':'docs/Russell-Dudek-GoDaddy-Executive-Interview-Questions.pdf'
-};
-const visualIntegrityCss=String.raw`/* 2026-07-15 visual integrity system */
-:root{
-  color-scheme:light;
-  --ui-ink:#22383c;
-  --ui-ink-strong:#111f22;
-  --ui-teal-text:#075f64;
-  --ui-on-dark:#f3fffb;
-  --ui-on-dark-soft:#e2f7f2;
-  --ui-resolver:#0d3d43;
-  --ui-resolver-row:#123d43;
-  --ui-resolver-active:#166269;
-}
-
-/* Light surfaces: dark text is the default, including cards nested inside dark sections. */
-body{color:var(--ui-ink)}
-.paper,
-.tension,
-.contract-field,
-.score-panel,
-.phase,
-.question,
-.objection-box,
-.sheet,
-.callout,
-.mini-record,
-.compact-table th,
-.compact-table td{color:var(--ui-ink)}
-.paper h1,.paper h2,.paper h3,
-.tension strong,
-.contract-field b,
-.score-panel h3,
-.phase h3,
-.question strong,
-.objection-box .truth,
-.sheet h1,.sheet h2,.sheet h3{color:var(--ui-ink-strong)}
-.paper p,.paper li,.paper small,
-.tension p,.tension .cost,
-.contract-field p,
-.score-panel p,.score-panel .metric,.score-panel small,
-.phase li,
-.question p,
-.objection-box p,.objection-box li,
-.sheet p,.sheet li,.sheet td,.sheet th,
-.callout p,.mini-record span,
-.doc-subtitle,.contact,.page-foot,.role-line span{color:var(--ui-ink)!important}
-.eyebrow,.tension .vs,.phase .days,.question::before,
-.contract-field::before,.doc-section h2,.doc-role,.mini-record b{color:var(--ui-teal-text)!important}
-.cost{color:#34484b!important}
-.score-tab{color:var(--ui-ink-strong)!important}
-.score-tab[aria-selected="true"]{background:var(--gd-deep)!important;color:#fff!important}
-
-/* Dark section copy stays light, while nested white cards remain dark via the rules above. */
-.dark{color:var(--ui-on-dark)}
-.dark > .section-inner > .section-head h2,
-.dark > .section-inner > .section-head p,
-.dark > .section-inner > .verdict{color:var(--ui-on-dark)!important}
-.dark > .section-inner > .section-head .eyebrow{color:var(--ui-on-dark-soft)!important}
-.dark .contract-field,.dark .contract-field *{color:var(--ui-ink)!important}
-.dark .contract-field::before{color:var(--ui-teal-text)!important}
-.dark .objection-box,.dark .objection-box *{color:var(--ui-ink)!important}
-.dark .objection-box .eyebrow{color:var(--ui-teal-text)!important}
-
-/* Teal evidence section. */
-.teal{color:var(--ui-on-dark)}
-.teal > .section-inner > .section-head h2,
-.teal > .section-inner > .section-head p,
-.teal > .section-inner > .section-head .eyebrow,
-.teal .evidence h3,
-.teal .evidence p,
-.teal .evidence .org,
-.teal .proof-tag{color:var(--ui-on-dark)!important}
-.teal .proof-tag{border-color:rgba(255,255,255,.72)!important}
-
-/* Resolver: no pale text on light animation states. */
-.resolver{background:var(--ui-resolver)!important;color:var(--ui-on-dark)!important;box-shadow:0 28px 70px rgba(0,66,73,.28)}
-.resolver-top{border-bottom-color:rgba(255,255,255,.32)!important}
-.resolver .eyebrow{color:#ddfff1!important}
-.resolver-title{color:#fff!important}
-.query{background:#08373d!important;color:#f3fffb!important;border:1px solid rgba(255,255,255,.2)}
-.record{background:var(--ui-resolver-row)!important;border:1px solid rgba(255,255,255,.32)!important;box-shadow:inset 5px 0 0 rgba(140,227,83,.94)!important;animation:resolve 5.2s ease-in-out infinite}
-.record-key{color:#c8ff8a!important}
-.record-val{color:#fff!important;font-weight:700!important}
-.record-conf,.resolver-foot{color:#e6faf5!important;font-weight:700!important}
-.scenario-btn{border-color:rgba(255,255,255,.8)!important;color:#fff!important;background:rgba(255,255,255,.06)!important}
-.scenario-btn[aria-pressed="true"]{background:var(--gd-yellow)!important;color:#111!important;border-color:var(--gd-yellow)!important}
-
-/* CTA, documents, and footer. */
-.cta,.cta h2,.cta p{color:var(--ui-ink-strong)!important}
-.cta .eyebrow{color:var(--ui-ink-strong)!important}
-.button,.doc-actions a,.doc-actions button{color:#fff!important}
-.button.secondary,.doc-actions .light{color:#111!important}
-.sheet .callout{background:#eef7f7!important}
-.sheet .warning{background:#fff3f3!important}
-.footer,.footer *{color:#fff!important}
-.footer img,.footer svg{display:none!important}
-
-@keyframes resolve{
-  0%,10%,100%{
-    transform:translateX(0);
-    background:var(--ui-resolver-row);
-    border-color:rgba(255,255,255,.32);
-    box-shadow:inset 5px 0 0 rgba(140,227,83,.94);
-  }
-  20%,42%{
-    transform:translateX(6px);
-    background:var(--ui-resolver-active);
-    border-color:rgba(255,255,255,.86);
-    box-shadow:inset 7px 0 0 var(--gd-lime),0 0 0 2px rgba(140,227,83,.24),0 10px 24px rgba(0,0,0,.18);
-  }
-  55%{transform:translateX(0)}
-}
-@media (prefers-reduced-motion:reduce){
-  .record{animation:none!important;transform:none!important;background:var(--ui-resolver-row)!important}
-}`;
-const statusEl=document.getElementById('status');
-function dataUri(mime,text){return `data:${mime};base64,${btoa(unescape(encodeURIComponent(text)))}`}
-async function inlineCssImports(css,zip){
- const re=/@import\s+(?:url\()?['"]?([^'")]+)['"]?\)?\s*;/g;
- let output='',last=0;
- for(const match of css.matchAll(re)){
-   output+=css.slice(last,match.index);
-   const imported=zip.file(match[1]);
-   if(imported)output+=await imported.async('text');
-   last=match.index+match[0].length;
- }
- return output+css.slice(last);
-}
-async function render(zip,file){
- const entry=zip.file(file)||zip.file('index.html');
- if(!entry)throw new Error('Campaign entry point was not found.');
- const html=await entry.async('text');
- const doc=new DOMParser().parseFromString(html,'text/html');
- const scripts=[];
- for(const link of [...doc.querySelectorAll('link[rel="stylesheet"][href]')]){
-   const asset=zip.file(link.getAttribute('href'));
-   if(asset){
-     const style=doc.createElement('style');
-     style.textContent=await inlineCssImports(await asset.async('text'),zip);
-     link.replaceWith(style);
-   }
- }
- const visualStyle=doc.createElement('style');
- visualStyle.setAttribute('data-visual-integrity','2026-07-15');
- visualStyle.textContent=visualIntegrityCss;
- doc.head.appendChild(visualStyle);
- for(const stray of [...doc.querySelectorAll('footer img,footer svg')])stray.remove();
- for(const img of [...doc.querySelectorAll('img[src]')]){
-   const src=img.getAttribute('src'),asset=zip.file(src);if(!asset)continue;
-   if(src.endsWith('.svg'))img.src=dataUri('image/svg+xml',await asset.async('text'));
-   else{const blob=await asset.async('blob');img.src=URL.createObjectURL(blob)}
- }
- for(const script of [...doc.querySelectorAll('script[src]')]){
-   const asset=zip.file(script.getAttribute('src'));if(asset)scripts.push(await asset.async('text'));script.remove();
- }
- const expectedPdf=routePdf[file];
- if(expectedPdf){
-   const actions=doc.querySelector('.doc-actions');
-   if(actions&&!actions.querySelector('a[href$=".pdf"]')){
-     const download=doc.createElement('a');
-     download.href=expectedPdf;
-     download.textContent='Download PDF';
-     actions.prepend(download);
-   }
-   for(const button of [...doc.querySelectorAll('.doc-actions button')]){
-     if(button.textContent.includes('Print')){button.textContent='Print';button.classList.add('light')}
-   }
- }
- for(const a of [...doc.querySelectorAll('a[href]')]){
-   const href=a.getAttribute('href');
-   if(!href||href.startsWith('#')||href.startsWith('http')||href.startsWith('mailto:')||href.startsWith('tel:'))continue;
-   if(href.endsWith('.html')){a.href=`?file=${encodeURIComponent(href)}`;continue;}
-   if(href.toLowerCase().endsWith('.pdf')){
-     const name=href.split('/').pop();
-     const pdf=zip.file(href)||zip.file(`docs/${name}`)||zip.file(name);
-     if(pdf){
-       const bytes=await pdf.async('uint8array');
-       a.href=URL.createObjectURL(new Blob([bytes],{type:'application/pdf'}));
-       a.download=name;
-       a.textContent='Download PDF';
-     }
-   }
- }
- const meta=doc.createElement('meta');meta.name='generator';meta.content='Independent candidate campaign';doc.head.appendChild(meta);
- document.open();document.write('<!doctype html>'+doc.documentElement.outerHTML);document.close();
- for(const code of scripts){const s=document.createElement('script');s.textContent=code;document.body.appendChild(s)}
-}
-(async()=>{
- try{
-  statusEl.textContent='Opening the verified source package…';
-  const chunks=await Promise.all(parts.map(async p=>{const r=await fetch(`.publish/${p}`,{cache:'no-store'});if(!r.ok)throw new Error(`${p}: ${r.status}`);return (await r.text()).trim()}));
-  const raw=atob(chunks.join('')),bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);
-  statusEl.textContent='Validating campaign routes…';
-  const zip=await JSZip.loadAsync(bytes);
-  const file=new URLSearchParams(location.search).get('file')||'index.html';
-  if(file.includes('..')||!file.endsWith('.html'))throw new Error('Invalid campaign route.');
-  await render(zip,file);
- }catch(err){console.error(err);statusEl.className='status error';statusEl.textContent='The campaign could not be opened.\n'+err.message;}
-})();
-</script></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Russell Dudek - GoDaddy Director, Applied ML/AI Candidate Vision</title><meta name="description" content="Independent candidate vision by Russell Dudek for GoDaddy Director, Applied ML/AI."><link rel="stylesheet" href="styles.css"></head><body><a class="skip" href="#main">Skip to content</a><nav class="site-nav" aria-label="Primary"><div class="nav-inner"><div class="nav-brand">Russell Dudek / Candidate Vision</div><div class="nav-links"><a href="#mandate">Mandate</a><a href="#model">Resolver</a><a href="#evidence">Evidence</a><a href="#plan">120 Days</a><a href="resume.html">Resume</a><a href="interview-brief.html">Brief</a></div></div></nav>
+<main id="main">
+<section class="hero"><div class="hero-inner"><div class="hero-copy"><div class="employer-lockup"><img src="assets/brand/godaddy-official.svg" alt="GoDaddy"><div class="independent">Candidate vision for Director, Applied ML/AI<br><b>by Russell Dudek</b></div></div><div style="height:42px"></div><div class="eyebrow">The operating mandate beneath the title</div><h1>Resolve the next best move.</h1><div class="tagline-rule"></div><p class="thesis-line">Then prove it created momentum for the entrepreneur.</p><p>GoDaddy is hiring for more than a model portfolio. The role must turn customer context, agentic capability, data pipelines, experimentation, human authority, and global operating controls into personalized outcomes that customers can trust and edit.</p><p class="hero-note"><b>Candidate thesis:</b> Personalization becomes a durable platform capability when every AI action carries a visible state, next move, authority boundary, evidence standard, and refresh horizon.</p></div>
+<div class="resolver" aria-label="Illustrative Entrepreneur Outcome Resolver"><div class="resolver-top"><div><div class="eyebrow">Illustrative candidate model</div><div class="resolver-title">Entrepreneur Outcome Resolver</div></div><span class="status-pill">RESOLVED</span></div><div class="query" data-query>venture.example -&gt; next_best_move? <span class="cursor" aria-hidden="true"></span></div><div class="records">
+<div class="record" data-record="STATE"><span class="record-key">STATE</span><span class="record-val">Site live; weak discoverability</span><span class="record-conf">illustrative</span></div>
+<div class="record" data-record="NEXT"><span class="record-key">NEXT</span><span class="record-val">Diagnose intent gaps and prepare a focused acquisition experiment</span><span class="record-conf">hypothesis</span></div>
+<div class="record" data-record="AUTH"><span class="record-key">AUTH</span><span class="record-val">Recommend and prepare; entrepreneur approves publishing and spend</span><span class="record-conf">bounded</span></div>
+<div class="record" data-record="PROOF"><span class="record-key">PROOF</span><span class="record-val">Qualified visits, engaged sessions, conversion event, cost guardrail</span><span class="record-conf">measurement</span></div>
+<div class="record" data-record="TTL"><span class="record-key">TTL</span><span class="record-val">7 days</span><span class="record-conf">refresh</span></div></div>
+<div class="resolver-controls" role="group" aria-label="Choose an illustrative entrepreneur scenario"><button class="scenario-btn" data-scenario="idea" aria-pressed="false">New idea</button><button class="scenario-btn" data-scenario="traffic" aria-pressed="true">Site, no traffic</button><button class="scenario-btn" data-scenario="service" aria-pressed="false">Service bookings</button><button class="scenario-btn" data-scenario="seller" aria-pressed="false">Repeat seller</button></div><div class="resolver-foot">Defaults are illustrative, not claims about GoDaddy's internal data or systems. Use arrow keys between scenario controls.</div></div></div></section>
+<section class="section paper" id="mandate"><div class="section-inner"><div class="section-head"><div><div class="eyebrow">Tactical empathy before prescription</div><h2>The role sits inside five real tensions.</h2></div><p>GoDaddy already serves entrepreneurs across domains, websites, commerce, marketing, and support. The leadership burden is not proving that AI can generate content. It is making personalized intelligence coherent across the journey without weakening customer control, reliability, or economics.</p></div><div class="tension-map">
+<div class="tension"><span class="vs">Personalization vs platform</span><strong>One customer journey. Millions of legitimate contexts.</strong><p>Shared intelligence must create reusable leverage without flattening the differences among a first-time founder, a local service business, and a scaling seller.</p><p class="cost"><b>Cost of unresolved tension:</b> fragmented experiences, duplicate models, and inconsistent next-step logic.</p></div>
+<div class="tension"><span class="vs">Autonomy vs authority</span><strong>Agents can act. Entrepreneurs must remain in control.</strong><p>The system should know when to draft, recommend, execute within bounds, or escalate to the customer or a GoDaddy Guide.</p><p class="cost"><b>Cost:</b> either timid automation that creates little value or overreach that erodes trust.</p></div>
+<div class="tension"><span class="vs">Experiment vs reliability</span><strong>Move quickly without making production the laboratory.</strong><p>Rapid iteration needs evaluation, observability, rollback, cost/latency budgets, regional controls, and clear production ownership.</p><p class="cost"><b>Cost:</b> innovation theater, incident risk, and learning that cannot be reused.</p></div>
+<div class="tension"><span class="vs">Global vs local</span><strong>Consistent standards. Context-sensitive decisions.</strong><p>Data, language, regulation, channel behavior, and business maturity vary. Governance should standardize proof and authority while allowing local adaptation.</p><p class="cost"><b>Cost:</b> global inconsistency or centrally designed experiences that miss local intent.</p></div>
+<div class="tension"><span class="vs">Novelty vs outcome</span><strong>Research matters only when it changes the entrepreneur's result.</strong><p>Roadmap landmarks should connect technical capability to discovery, launch, engagement, sales, retention, service, and operating efficiency.</p><p class="cost"><b>Cost:</b> impressive demos with unclear customer or business value.</p></div>
+<div class="tension"><span class="vs">Central AI vs domain ownership</span><strong>Build a platform without creating an AI bottleneck.</strong><p>Central teams should own shared contracts, tooling, evidence, and guardrails; product domains should own customer outcomes and operating adoption.</p><p class="cost"><b>Cost:</b> either duplicated stacks or centralized queues that slow delivery.</p></div></div></div></section>
+<section class="section dark" id="model"><div class="section-inner"><div class="section-head"><div><div class="eyebrow">The operating artifact</div><h2>Make every personalized action resolve to a contract.</h2></div><p>The Entrepreneur Outcome Resolver is a candidate-created model for discovery. It borrows the discipline of internet resolution - a request, a dependable answer, explicit authority, and a refresh horizon - without pretending to describe GoDaddy's internal architecture.</p></div><div class="contract-grid"><div class="contract-field" data-key="STATE"><b>What is true now?</b><p>Customer intent, business maturity, product state, recent behavior, constraints, and uncertainty.</p></div><div class="contract-field" data-key="NEXT"><b>What is the next useful move?</b><p>One contextual action linked to an entrepreneur outcome, not a generic content suggestion.</p></div><div class="contract-field" data-key="AUTH"><b>Who may decide and act?</b><p>Draft, recommend, execute within bounds, or escalate. Customer and Guide authority remain explicit.</p></div><div class="contract-field" data-key="PROOF"><b>What evidence earns continuation?</b><p>Customer behavior, quality, trust, business economics, latency, cost, and operational signals.</p></div><div class="contract-field" data-key="TTL"><b>When does the answer expire?</b><p>Personalization must refresh when context changes; stale certainty is an operating defect.</p></div></div></div></section>
+<section class="section paper"><div class="section-inner"><div class="section-head"><div><div class="eyebrow">Balanced scorecard</div><h2>Measure momentum, not model activity.</h2></div><p>No unsupported maturity scores. The roadmap should use observable units tied to the customer's progress and the system's operating integrity.</p></div><div class="scorecard"><div class="score-nav" role="tablist" aria-label="Outcome scorecard lenses">
+<button class="score-tab" role="tab" aria-selected="true" data-content="<h3>Entrepreneur momentum</h3><p>Does the customer make a useful next move faster and with more confidence?</p><div class='metric-list'><div class='metric'><b>Activation</b><small>domain, site, commerce, campaign, or booking milestone reached</small></div><div class='metric'><b>Time to useful outcome</b><small>elapsed time from intent to a completed customer step</small></div><div class='metric'><b>Continuation</b><small>next-step completion and repeat productive behavior</small></div><div class='metric'><b>Customer control</b><small>edit, approve, undo, escalation, complaint, and opt-out signals</small></div></div>">Customer momentum</button>
+<button class="score-tab" role="tab" aria-selected="false" data-content="<h3>Decision quality</h3><p>Can the system explain why this move fits this customer now?</p><div class='metric-list'><div class='metric'><b>Relevance</b><small>acceptance, edits, skips, reversals, and downstream behavior</small></div><div class='metric'><b>Calibration</b><small>confidence compared with observed outcomes</small></div><div class='metric'><b>Freshness</b><small>age of state and time to re-resolution</small></div><div class='metric'><b>Exception quality</b><small>appropriate holds, escalations, and human recovery</small></div></div>">Decision quality</button>
+<button class="score-tab" role="tab" aria-selected="false" data-content="<h3>Platform economics</h3><p>Does shared intelligence create compounding leverage?</p><div class='metric-list'><div class='metric'><b>Reuse</b><small>shared capabilities adopted across product journeys</small></div><div class='metric'><b>Latency and cost</b><small>per resolved action, with quality guardrails</small></div><div class='metric'><b>Experiment velocity</b><small>time from hypothesis to trustworthy evidence</small></div><div class='metric'><b>Operational load</b><small>incidents, support burden, rework, and manual intervention</small></div></div>">Platform economics</button>
+<button class="score-tab" role="tab" aria-selected="false" data-content="<h3>Trust and governance</h3><p>Can the system scale without hiding authority or risk?</p><div class='metric-list'><div class='metric'><b>Authority compliance</b><small>actions remain inside approved bounds</small></div><div class='metric'><b>Regional fitness</b><small>policy, language, and data controls by market</small></div><div class='metric'><b>Observability</b><small>traceability from context to action to outcome</small></div><div class='metric'><b>Recovery</b><small>detection, rollback, correction, and learning capture</small></div></div>">Trust and governance</button></div><div class="score-panel"><h3>Entrepreneur momentum</h3><p>Does the customer make a useful next move faster and with more confidence?</p><div class="metric-list"><div class="metric"><b>Activation</b><small>domain, site, commerce, campaign, or booking milestone reached</small></div><div class="metric"><b>Time to useful outcome</b><small>elapsed time from intent to a completed customer step</small></div><div class="metric"><b>Continuation</b><small>next-step completion and repeat productive behavior</small></div><div class="metric"><b>Customer control</b><small>edit, approve, undo, escalation, complaint, and opt-out signals</small></div></div></div></div></div></section>
+<section class="section teal" id="evidence"><div class="section-inner"><div class="section-head"><div><div class="eyebrow">Why Russell's evidence transfers</div><h2>Operating depth around the model.</h2></div><p>The case is not title equivalence. It is a through-line: high-reliability engineering, customer-backward scale, governed autonomy, signal-to-decision mechanisms, and hands-on AI workflow design.</p></div><div class="evidence-trail">
+<div class="evidence"><div class="org">Vape-Jet / 2025-Present</div><h3>Telemetry into operating action</h3><p>Leads AI-first transformation across production, quality, support, engineering issue flow, customer success, ERP, CRM, and a software-enabled fleet of approximately 1,000 fielded robots.</p><span class="proof-tag">direct evidence</span></div>
+<div class="evidence"><div class="org">DudeWorth / 2017-Present</div><h3>Agentic workflow mechanics</h3><p>Designs opportunity frameworks and agentic patterns combining context, retrieval, human judgment, escalation, decision records, evaluation, governance, and adoption burden.</p><span class="proof-tag">direct + concept bounded</span></div>
+<div class="evidence"><div class="org">Amazon / 2014-2018</div><h3>Customer-backward scale</h3><p>Led Prime Pittsburgh operating execution in a 24/7 environment supporting approximately five million second-day orders annually, with visible measures, escalation, standard work, and Gemba routines.</p><span class="proof-tag">direct evidence</span></div>
+<div class="evidence"><div class="org">Compunetics / 2000-2013</div><h3>Reliability and technical teams</h3><p>Led engineering, manufacturing, quality, customer delivery, and complex programs in advanced electronics and high-reliability environments; built controls, root-cause systems, and quality mechanisms.</p><span class="proof-tag">direct evidence</span></div></div></div></section>
+<section class="section paper" id="plan"><div class="section-inner"><div class="section-head"><div><div class="eyebrow">First 120 days</div><h2>Earn the roadmap before announcing it.</h2></div><p>The first deliverable is not a grand strategy deck. It is a shared, evidence-backed view of the customer moments, platform seams, authority decisions, and technical constraints that determine where agentic personalization can create trustworthy momentum.</p></div><div class="plan-rail"><div class="phase"><div class="days">DAYS 1-30</div><h3>Read the resolution system</h3><ul><li>Map entrepreneur journeys and current AI/ML assets</li><li>Review data, model, pipeline, experimentation, and regional controls</li><li>Shadow product, engineering, analytics, Guides, security, privacy, and finance</li><li>Identify existing measures and unresolved customer friction</li></ul></div><div class="phase"><div class="days">DAYS 31-60</div><h3>Define the contracts</h3><ul><li>Agree on STATE/NEXT/AUTH/PROOF/TTL vocabulary</li><li>Choose two high-value customer moments</li><li>Set evaluation, observability, cost/latency, and rollback standards</li><li>Clarify central platform versus domain ownership</li></ul></div><div class="phase"><div class="days">DAYS 61-90</div><h3>Run bounded proofs</h3><ul><li>Launch controlled experiments with explicit human authority</li><li>Compare outcomes against current behavior</li><li>Instrument trust, quality, economics, and operating load</li><li>Capture reusable components and fast no-go evidence</li></ul></div><div class="phase"><div class="days">DAYS 91-120</div><h3>Commit the three-year logic</h3><ul><li>Publish sequenced roadmap landmarks and dependencies</li><li>Fund shared capabilities based on demonstrated reuse</li><li>Establish review cadence and decision rights</li><li>Build team and partner plan around verified capability gaps</li></ul></div></div></div></section>
+<section class="section dark"><div class="section-inner"><div class="section-head"><div><div class="eyebrow">The hard objection</div><h2>This is a stretch role. Say so.</h2></div><p>Credibility improves when the campaign does not smuggle adjacent experience into claims of production ML ownership.</p></div><div class="objection"><div class="objection-box gap"><div class="eyebrow">Reasonable hiring concern</div><p class="truth">The posting asks for 8+ years of AI/ML leadership, globally deployed customer-facing personalization systems, deep ML/cloud framework expertise, agentic AI production delivery, and Claude Code familiarity.</p><p>Russell's verified record does not establish a conventional ML engineering leadership ladder, a global recommendation-system portfolio, or confirmed Claude Code adoption.</p></div><div class="objection-box proof"><div class="eyebrow">Transferability case</div><p class="truth">Russell brings the operating discipline surrounding models: the part that turns capability into a reliable customer and business system.</p><ul><li>Technical-team and high-reliability leadership</li><li>Customer-backward scale and measurable operating cadence</li><li>Hands-on agentic workflow, retrieval, human authority, evaluation, and governance design</li><li>Telemetry, fleet, quality, support, and engineering signal integration</li><li>Scientific and engineering grounding across complex systems</li></ul></div></div><div class="verdict"><b>Discovery hypothesis:</b> Russell is compelling only if GoDaddy values a director who can connect deep ML specialists to product, customer, operating, governance, and economic outcomes - and if he proves technical credibility through architecture review, evaluation design, pipeline reasoning, and deliberate hiring/partnering for depth he does not claim.</div></div></section>
+<section class="section paper"><div class="section-inner"><div class="section-head"><div><div class="eyebrow">Executive interview questions</div><h2>Questions that test the real mandate.</h2></div><p>These questions are designed to surface decision rights, current constraints, and the difference between a technical roadmap and an adopted customer-outcome platform.</p></div><div class="questions"><div class="question"><strong>Where does GoDaddy most need personalization to change a customer outcome over the next 18 months?</strong><p>Separates platform ambition from a prioritized entrepreneur moment.</p></div><div class="question"><strong>What must remain consistent globally, and what must be resolved locally by market, product, or customer context?</strong><p>Tests the global-versus-local operating boundary.</p></div><div class="question"><strong>Where is agent authority currently ambiguous?</strong><p>Surfaces the draft, recommend, execute, and escalate decisions.</p></div><div class="question"><strong>Which experiments have produced promising engagement but failed to become durable platform capability?</strong><p>Finds handoff, ownership, observability, and reuse friction.</p></div><div class="question"><strong>How are product teams expected to consume shared AI/ML capabilities without creating a central bottleneck?</strong><p>Clarifies platform versus domain ownership.</p></div><div class="question"><strong>What evidence would make leadership increase investment, hold, or stop an AI initiative?</strong><p>Reveals the decision standard behind the three-year roadmap.</p></div><div class="question"><strong>Where do GoDaddy Guides need to retain or gain authority as customer-facing agents become more capable?</strong><p>Connects customer control to human operating design.</p></div><div class="question"><strong>What is the strongest reason this hire could fail despite excellent technical credentials?</strong><p>Invites the organization to name adoption, alignment, or execution burden directly.</p></div></div></div></section>
+<section class="cta"><div class="cta-inner"><div><div class="eyebrow">Application set</div><h2>One thesis. Different evidence surfaces.</h2><p>The documents below reinforce the same argument without duplicating the site.</p></div><div class="actions"><a class="button" href="resume.html">View Resume</a><a class="button" href="interview-brief.html">Interview Brief</a><a class="button secondary" href="120-day-plan.html">120-Day Plan</a><a class="button secondary" href="outcome-resolver.html">Resolver Contract</a></div></div></section>
+</main><footer class="footer"><div class="footer-inner"><span>Independent candidate work by Russell Dudek. GoDaddy marks are used only to identify the intended employer; no endorsement is implied.</span><span>Public-source hypotheses are labeled for discovery.</span></div></footer><script src="app.js"></script></body></html>

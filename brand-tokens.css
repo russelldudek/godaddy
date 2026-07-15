@@ -1,0 +1,13 @@
+:root {
+  --gd-ink: #111111;       /* source-sampled official careers CSS */
+  --gd-teal: #09757a;      /* source-sampled official careers CSS */
+  --gd-aqua: #00a4a6;      /* source-sampled official careers CSS */
+  --gd-deep: #004249;      /* source-sampled official careers CSS */
+  --gd-lime: #41db00;      /* source-sampled official careers CSS */
+  --gd-yellow: #ffdb00;    /* source-sampled official careers CSS */
+  --gd-coral: #ff5b5b;     /* source-sampled official careers CSS */
+  --gd-paper: #f6f6f6;     /* source-sampled official careers CSS */
+  --white: #ffffff;
+  --campaign-mint: #dff7ee; /* candidate-original, subordinate */
+  --campaign-blue: #d9f2ff; /* candidate-original, subordinate */
+}
