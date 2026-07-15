@@ -21,6 +21,9 @@ async function render(zip,file){
    const asset=zip.file(link.getAttribute('href'));
    if(asset){const style=doc.createElement('style');style.textContent=await asset.async('text');link.replaceWith(style)}
  }
+ const contrastResponse=await fetch('contrast-overrides.css',{cache:'no-store'});
+ if(contrastResponse.ok){const style=doc.createElement('style');style.setAttribute('data-visual-audit','contrast');style.textContent=await contrastResponse.text();doc.head.appendChild(style)}
+ for(const stray of [...doc.querySelectorAll('footer img,footer svg')])stray.remove();
  for(const img of [...doc.querySelectorAll('img[src]')]){
    const src=img.getAttribute('src'),asset=zip.file(src);if(!asset)continue;
    if(src.endsWith('.svg'))img.src=dataUri('image/svg+xml',await asset.async('text'));
@@ -47,14 +50,14 @@ async function render(zip,file){
 }
 (async()=>{
  try{
-   statusEl.textContent='Opening the verified source package…';
-   const chunks=await Promise.all(parts.map(async p=>{const r=await fetch(`.publish/${p}`);if(!r.ok)throw new Error(`${p}: ${r.status}`);return (await r.text()).trim()}));
-   const raw=atob(chunks.join('')),bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);
-   statusEl.textContent='Validating campaign routes…';
-   const zip=await JSZip.loadAsync(bytes);
-   const file=new URLSearchParams(location.search).get('file')||'index.html';
-   if(file.includes('..')||!file.endsWith('.html'))throw new Error('Invalid campaign route.');
-   await render(zip,file);
+  statusEl.textContent='Opening the verified source package…';
+  const chunks=await Promise.all(parts.map(async p=>{const r=await fetch(`.publish/${p}`);if(!r.ok)throw new Error(`${p}: ${r.status}`);return (await r.text()).trim()}));
+  const raw=atob(chunks.join('')),bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);
+  statusEl.textContent='Validating campaign routes…';
+  const zip=await JSZip.loadAsync(bytes);
+  const file=new URLSearchParams(location.search).get('file')||'index.html';
+  if(file.includes('..')||!file.endsWith('.html'))throw new Error('Invalid campaign route.');
+  await render(zip,file);
  }catch(err){console.error(err);statusEl.className='status error';statusEl.textContent='The campaign could not be opened.\n'+err.message;}
 })();
 </script></body></html>
