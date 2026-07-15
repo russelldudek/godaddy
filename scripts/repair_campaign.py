@@ -1,180 +1,54 @@
 from __future__ import annotations
-
-import base64
-import math
-import re
-import shutil
-import zipfile
+import base64, math, re, shutil, zipfile, zlib
 from pathlib import Path
-
 from weasyprint import HTML
-
-REPO = Path.cwd()
-BUILD = REPO / ".campaign-repair"
-SITE = BUILD / "site"
-ARCHIVE = BUILD / "campaign.zip"
-
-DOCUMENT_PDFS = {
-    "resume.html": "docs/Russell-Dudek-GoDaddy-Resume.pdf",
-    "cover-letter.html": "docs/Russell-Dudek-GoDaddy-Cover-Letter.pdf",
-    "interview-brief.html": "docs/Russell-Dudek-GoDaddy-Interview-Thesis-Brief.pdf",
-    "120-day-plan.html": "docs/Russell-Dudek-GoDaddy-First-120-Days.pdf",
-    "hard-objection.html": "docs/Russell-Dudek-GoDaddy-Hard-Objection-Analysis.pdf",
-    "outcome-resolver.html": "docs/Russell-Dudek-GoDaddy-Entrepreneur-Outcome-Resolver.pdf",
-    "executive-questions.html": "docs/Russell-Dudek-GoDaddy-Executive-Interview-Questions.pdf",
-}
-
-PUBLIC_FILES = {
-    "index.html",
-    "styles.css",
-    "brand-tokens.css",
-    "contrast-overrides.css",
-    "app.js",
-    "resume.html",
-    "cover-letter.html",
-    "interview-brief.html",
-    "120-day-plan.html",
-    "hard-objection.html",
-    "outcome-resolver.html",
-    "executive-questions.html",
-    "README.md",
-    "brand-intelligence.md",
-    "source-notes.md",
-    "campaign-audit.md",
-    ".nojekyll",
-}
-
-
-def reconstruct_source() -> None:
-    chunks = sorted((REPO / ".publish").glob("source-*"))
-    if len(chunks) != 5:
-        raise RuntimeError(f"Expected five source chunks; found {len(chunks)}")
-    encoded = "".join(path.read_text(encoding="utf-8").strip() for path in chunks)
-    payload = base64.b64decode(encoded)
-    ARCHIVE.parent.mkdir(parents=True, exist_ok=True)
-    ARCHIVE.write_bytes(payload)
-    SITE.mkdir(parents=True, exist_ok=True)
-    with zipfile.ZipFile(ARCHIVE) as source_zip:
-        source_zip.extractall(SITE)
-
-
-def repair_styles() -> None:
-    styles_path = SITE / "styles.css"
-    override_path = REPO / "contrast-overrides.css"
-    styles = styles_path.read_text(encoding="utf-8")
-    marker = "/* 2026-07-15 visual integrity system */"
-    if marker in styles:
-        styles = styles.split(marker, 1)[0].rstrip()
-    override = override_path.read_text(encoding="utf-8").strip()
-    styles_path.write_text(f"{styles}\n\n{override}\n", encoding="utf-8")
-    shutil.copy2(override_path, SITE / "contrast-overrides.css")
-
-
-def repair_homepage() -> None:
-    path = SITE / "index.html"
-    html = path.read_text(encoding="utf-8")
-    html = html.replace(' style="color:#bfe9e4"', "")
-    html = html.replace(' style="color:#dff7ee"', "")
-    path.write_text(html, encoding="utf-8")
-
-
-def repair_document_links() -> None:
-    for route, pdf_path in DOCUMENT_PDFS.items():
-        path = SITE / route
-        html = path.read_text(encoding="utf-8")
-        if pdf_path not in html:
-            link = f'<a href="{pdf_path}" download>Download PDF</a>'
-            html = html.replace('<div class="doc-actions">', f'<div class="doc-actions">{link}', 1)
-        html = html.replace(
-            '<button onclick="window.print()">Print / Save PDF</button>',
-            '<button class="light" onclick="window.print()">Print</button>',
-        )
-        path.write_text(html, encoding="utf-8")
-
-
-def regenerate_pdfs() -> None:
-    for route, pdf_path in DOCUMENT_PDFS.items():
-        output = SITE / pdf_path
-        output.parent.mkdir(parents=True, exist_ok=True)
-        HTML(filename=str(SITE / route), base_url=str(SITE)).write_pdf(str(output))
-        if not output.exists() or output.stat().st_size < 1_000:
-            raise RuntimeError(f"Failed to generate {output}")
-
-
-def publish_direct_files() -> None:
-    for name in PUBLIC_FILES:
-        source = SITE / name
-        if source.exists():
-            target = REPO / name
-            target.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(source, target)
-
-    for directory in ("assets", "docs", "research"):
-        source_dir = SITE / directory
-        target_dir = REPO / directory
-        if target_dir.exists():
-            shutil.rmtree(target_dir)
-        if source_dir.exists():
-            shutil.copytree(source_dir, target_dir)
-
-
-def rebuild_source_chunks() -> None:
-    if ARCHIVE.exists():
-        ARCHIVE.unlink()
-    excluded_parts = {".github", ".campaign-repair", ".publish"}
-    with zipfile.ZipFile(ARCHIVE, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as output_zip:
-        for path in sorted(SITE.rglob("*")):
-            if not path.is_file():
-                continue
-            relative = path.relative_to(SITE)
-            if relative.parts and relative.parts[0] in excluded_parts:
-                continue
-            output_zip.write(path, relative.as_posix())
-
-    encoded = base64.b64encode(ARCHIVE.read_bytes()).decode("ascii")
-    size = math.ceil(len(encoded) / 5)
-    publish_dir = REPO / ".publish"
-    publish_dir.mkdir(exist_ok=True)
-    for index in range(5):
-        chunk = encoded[index * size : (index + 1) * size]
-        (publish_dir / f"source-{index:02d}").write_text(chunk, encoding="utf-8")
-
-
-def verify() -> None:
-    required = [REPO / "index.html", REPO / "styles.css", REPO / "brand-tokens.css"]
-    required.extend(REPO / path for path in DOCUMENT_PDFS.values())
-    missing = [str(path) for path in required if not path.exists()]
-    if missing:
-        raise RuntimeError(f"Missing published files: {missing}")
-
-    home = (REPO / "index.html").read_text(encoding="utf-8")
-    if "Resolving the campaign." in home or "JSZip" in home:
-        raise RuntimeError("Loader shell remains in the published homepage")
-
-    styles = (REPO / "styles.css").read_text(encoding="utf-8")
-    for token in ("--ui-resolver-row", ".dark .contract-field", ".teal .evidence p"):
-        if token not in styles:
-            raise RuntimeError(f"Missing visual integrity rule: {token}")
-
-    for route, pdf_path in DOCUMENT_PDFS.items():
-        html = (REPO / route).read_text(encoding="utf-8")
-        if pdf_path not in html:
-            raise RuntimeError(f"Missing PDF link in {route}")
-
-
-def main() -> None:
-    if BUILD.exists():
-        shutil.rmtree(BUILD)
-    reconstruct_source()
-    repair_styles()
-    repair_homepage()
-    repair_document_links()
-    regenerate_pdfs()
-    publish_direct_files()
-    rebuild_source_chunks()
-    verify()
-    print("Campaign source, visual system, and PDFs rebuilt successfully.")
-
-
-if __name__ == "__main__":
-    main()
+ROOT=Path.cwd()
+DOCUMENT_PDFS={"resume.html":"docs/Russell-Dudek-GoDaddy-Resume.pdf","cover-letter.html":"docs/Russell-Dudek-GoDaddy-Cover-Letter.pdf","interview-brief.html":"docs/Russell-Dudek-GoDaddy-Interview-Thesis-Brief.pdf","120-day-plan.html":"docs/Russell-Dudek-GoDaddy-First-120-Days.pdf","hard-objection.html":"docs/Russell-Dudek-GoDaddy-Strategic-Fit-Technical-Credibility-Plan.pdf","outcome-resolver.html":"docs/Russell-Dudek-GoDaddy-Entrepreneur-Outcome-Resolver.pdf","executive-questions.html":"docs/Russell-Dudek-GoDaddy-Executive-Interview-Questions.pdf"}
+LEGACY={"docs/Russell-Dudek-GoDaddy-Hard-Objection-Analysis.pdf":"docs/Russell-Dudek-GoDaddy-Strategic-Fit-Technical-Credibility-Plan.pdf"}
+PUBLIC=['index.html','styles.css','brand-tokens.css','contrast-overrides.css','app.js','resume.html','cover-letter.html','interview-brief.html','120-day-plan.html','hard-objection.html','outcome-resolver.html','executive-questions.html','README.md','brand-intelligence.md','source-notes.md','campaign-audit.md','.nojekyll']
+def replace(path,old,new,marker):
+ p=ROOT/path; text=p.read_text()
+ if old in text:p.write_text(text.replace(old,new,1))
+ elif marker not in text:raise RuntimeError(f"Cannot migrate {path}")
+def migrate():
+ replace('index.html','<section class="section dark"><div class="section-inner"><div class="section-head"><div><div class="eyebrow" style="color:#bfe9e4">The hard objection</div><h2>This is a stretch role. Say so.</h2></div><p>Credibility improves when the campaign does not smuggle adjacent experience into claims of production ML ownership.</p></div><div class="objection"><div class="objection-box gap"><div class="eyebrow">Reasonable hiring concern</div><p class="truth">The posting asks for 8+ years of AI/ML leadership, globally deployed customer-facing personalization systems, deep ML/cloud framework expertise, agentic AI production delivery, and Claude Code familiarity.</p><p>Russell\'s verified record does not establish a conventional ML engineering leadership ladder, a global recommendation-system portfolio, or confirmed Claude Code adoption.</p></div><div class="objection-box proof"><div class="eyebrow">Transferability case</div><p class="truth">Russell brings the operating discipline surrounding models: the part that turns capability into a reliable customer and business system.</p><ul><li>Technical-team and high-reliability leadership</li><li>Customer-backward scale and measurable operating cadence</li><li>Hands-on agentic workflow, retrieval, human authority, evaluation, and governance design</li><li>Telemetry, fleet, quality, support, and engineering signal integration</li><li>Scientific and engineering grounding across complex systems</li></ul></div></div><div class="verdict"><b>Discovery hypothesis:</b> Russell is compelling only if GoDaddy values a director who can connect deep ML specialists to product, customer, operating, governance, and economic outcomes - and if he proves technical credibility through architecture review, evaluation design, pipeline reasoning, and deliberate hiring/partnering for depth he does not claim.</div></div></section>','<section class="section dark" id="strategic-fit"><div class="section-inner">\n<div class="section-head"><div><div class="eyebrow">Fit by mandate, not pedigree</div><h2>GoDaddy needs an AI operating leader who can turn specialized AI capability into entrepreneur momentum.</h2></div><p>The technical depth of the role matters. Russell\'s case is that the missing leadership layer may be the operating system around the models: customer outcomes, product decisions, human authority, evidence, adoption, and economics.</p></div>\n<div class="objection">\n<div class="objection-box proof"><div class="eyebrow">Mandate match</div><p class="truth">Russell\'s strongest fit is the work between model capability and customer outcome: aligning product, engineering, data, Guides, governance, and business leaders around what AI should do, who may act, and what evidence earns scale.</p><ul><li>Technical-team and high-reliability leadership</li><li>Customer-backward scale and measurable operating cadence</li><li>Hands-on agentic workflow, retrieval, human authority, evaluation, and governance design</li><li>Telemetry, fleet, quality, support, and engineering signal integration</li><li>Scientific and engineering grounding across complex systems</li></ul></div>\n<div class="objection-box proof"><div class="eyebrow">What Russell will prove early</div><p class="truth">Technical trust should be earned through visible work, not assumed from positioning.</p><ul><li>Architecture and end-to-end pipeline fluency with senior ML engineers</li><li>Offline and online evaluation design tied to customer control and economics</li><li>Direct adoption of GoDaddy\'s expected development toolchain, including Claude Code</li><li>Clear diagnosis of capabilities to develop, hire, or source through partners</li><li>One bounded customer-moment proof with explicit authority, evidence, and rollback</li></ul></div>\n</div>\n<div class="verdict"><b>Hiring thesis:</b> Russell is a differentiated fit when GoDaddy wants a director who can make applied AI coherent across technical specialization and entrepreneur outcomes. He will earn technical credibility through architecture review, evaluation design, direct tool fluency, and deliberate specialist team building.</div>\n</div></section>','Fit by mandate, not pedigree')
+ replace('interview-brief.html','<div class="doc-section"><h2>Hard objection</h2><div class="callout warning"><p><b>Russell does not meet the posting through title or domain equivalence.</b> The campaign does not substantiate 8+ years in AI/ML leadership, a global personalization/recommendation portfolio, deep production ML/cloud framework ownership, confirmed Claude Code adoption, or an advanced CS/ML/AI degree.</p></div><div class="callout"><p><b>Transferability hypothesis:</b> GoDaddy may value a leader who can connect deep ML specialists to product, customer, operating, governance, and economic outcomes, provided Russell proves technical credibility and builds the team around gaps he does not claim.</p></div></div>','<div class="doc-section"><h2>Strategic fit</h2><div class="callout"><p><b>Fit by mandate, not pedigree.</b> Russell\'s strongest case is leading the operating system around specialized ML: customer outcomes, product decisions, human authority, governance, adoption, and economics. His verified evidence combines high-reliability technical leadership, Amazon-scale customer operations, AI-first operating transformation, agentic workflow design, and telemetry-to-action mechanisms.</p></div><div class="callout"><p><b>What he will prove early:</b> architecture and pipeline fluency, evaluation design, direct adoption of GoDaddy\'s expected development toolchain, technical-team trust, and deliberate hiring or partnering for specialist depth.</p></div></div>','<h2>Strategic fit</h2>')
+ replace('cover-letter.html','<p>My background is unconventional for this role, and I will not blur that fact. I do not present a conventional eight-plus-year ML engineering leadership ladder or a verified global recommendation-system portfolio. I bring adjacent depth in the operating systems around models: leading engineering and high-reliability technical organizations; running customer-backward operations at Amazon scale; connecting telemetry, quality, customer, support, and engineering signals across approximately 1,000 fielded robots at Vape-Jet; and directly designing agentic workflows that combine context, retrieval, human judgment, escalation, evaluation, governance, and adoption.</p>','<p>My fit is grounded in the leadership layer this mandate must orchestrate. I have led engineering and high-reliability technical organizations, run customer-backward operations at Amazon scale, connected telemetry, quality, customer, support, and engineering signals across approximately 1,000 fielded robots at Vape-Jet, and directly designed agentic workflows that combine context, retrieval, human judgment, escalation, evaluation, governance, and adoption.</p>','strategic fit and technical credibility plan')
+ replace('cover-letter.html','<p>That experience prepared me to make technical capability legible to product, engineering, analytics, customer care, security, privacy, finance, and executive stakeholders - and to install the decision rights, evidence standards, team cadence, and operating controls that turn experiments into durable customer outcomes. It also taught me when to recruit, partner with, and defer to deeper specialists rather than manufacture expertise.</p>',"<p>That experience prepared me to connect specialized technical capability to product decisions, customer control, operating ownership, and economics. I would earn technical trust through architecture review, evaluation design, direct use of GoDaddy's development toolchain, and deliberate team design - partnering with deeper specialists wherever the work demands it rather than manufacturing expertise.</p>",'strategic fit and technical credibility plan')
+ replace('cover-letter.html',"<p>The independent candidate vision at <b>https://russelldudek.github.io/godaddy/</b> makes this reasoning tangible through an interactive Entrepreneur Outcome Resolver, a balanced outcome scorecard, a candid hard-objection analysis, and a first-120-days plan. It is not a claim about GoDaddy's undisclosed systems; it is a concrete hypothesis for how I would begin discovery.</p>","<p>The independent candidate vision at <b>https://russelldudek.github.io/godaddy/</b> makes this reasoning tangible through an interactive Entrepreneur Outcome Resolver, a balanced outcome scorecard, a strategic fit and technical credibility plan, and a first-120-days plan. It is not a claim about GoDaddy's undisclosed systems; it is a concrete hypothesis for how I would begin discovery and earn the roadmap.</p>",'strategic fit and technical credibility plan')
+ replace('resume.html','<div class="doc-section"><h2>GoDaddy mandate translation</h2><div class="doc-grid-2"><div class="callout"><h3>What transfers directly</h3><ul><li>Technical and cross-functional team leadership</li><li>High-reliability operating controls and root cause</li><li>Customer-backward scale and measurable operating cadence</li><li>Agentic workflow, human authority, evaluation, and governance design</li><li>Telemetry, quality, support, and engineering signal integration</li></ul></div><div class="callout warning"><h3>What remains a proof requirement</h3><ul><li>Conventional 8+ year AI/ML leadership ladder</li><li>Globally deployed recommendation and personalization portfolio</li><li>Deep production ML/cloud framework ownership</li><li>Confirmed Claude Code direct use and team adoption</li><li>Advanced CS/ML/AI degree</li></ul></div></div></div>\n','<div class="doc-section"><h2>GoDaddy mandate translation</h2><div class="doc-grid-2"><div class="callout"><h3>What transfers directly</h3><ul><li>Technical and cross-functional team leadership</li><li>High-reliability operating controls and root cause</li><li>Customer-backward scale and measurable operating cadence</li><li>Agentic workflow, human authority, evaluation, and governance design</li><li>Telemetry, quality, support, and engineering signal integration</li></ul></div><div class="callout"><h3>What Russell will prove early</h3><ul><li>Architecture and pipeline fluency with senior ML engineers</li><li>Offline and online evaluation tied to customer control and economics</li><li>Direct adoption of expected development tooling, including Claude Code</li><li>Team capability diagnosis, hiring, development, and partnering</li><li>A bounded personalization proof linked to an entrepreneur outcome</li></ul></div></div></div>\n','What Russell will prove early')
+ replace('120-day-plan.html','<li>Known candidate capability gaps are addressed through technical review, hiring, partnering, and deliberate learning.</li>','<li>Technical credibility is earned through architecture review, direct tooling fluency, specialist trust, deliberate hiring and partnering, and visible learning.</li>','Technical credibility is earned')
+ (ROOT/'hard-objection.html').write_bytes(zlib.decompress(base64.b64decode('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')))
+ p=ROOT/'README.md';p.write_text(p.read_text().replace('- Hard-objection analysis','- Strategic Fit & Technical Credibility Plan'))
+ (ROOT/'campaign-audit.md').write_bytes(zlib.decompress(base64.b64decode('eNplVU1v2zgQvetXDBCgJyu1HbdNvKcg2WIP2zZAg90zRY0kbihSS1J23V/fN6Q/gvQkmhwO37z3ZnxFD8q1plWJsRonZXpH93NrUlXlD8nRltbL9cd6+alefaiqqyv6ngK2e6PrDiGBdyYa76rqeWCagvGBejXhLMREKbBKI7tEexURO1mluSXVJQ7UmsA6Ee7PyhKg0OSjSUhmXJ8T857i4Pe4kQYlb01Ih1//44LpjFYSTFa5flY941whd0TiWCIOSHRNAkxNU/A7XHUqAL7ZMTm/J4sbkfYmDTQCgDCBoha044D8CPcTSzjwAE7LTvMiI1WUC6w3H+pWHSixHhzw2FoHbk1jrEkHQrXumr45Ju1BL2o9JaHGz3guHIB5VMZFMg41MsUkMKx3GUjO8AeQkj4pVXdKC5w4B6z4WAFI195pO7d8LCfwfyD3NT3XWb2v5/oD94HjRbs9N2Af9WF3HvHVICzggQSxFgCIT5akCYa7xZGA1XopDMQMtXDzpobW6zlbAAgTaqWfHDzoTnoA2A7QpfCCF4xfzDMNQUWORcDsMxxrPx0ES/DtrHEf3DhgGjkFo+OCWnjMH+Q9/EgmWcZXzzH5kQOWeM7vHZaDmUhbZcZYiPmXG9rBNG02VVX9afoBlvNzEko5CATX4gvxE602myX9oLvlckGr9a2sb2X96eMtlqvlelO4uLnLR5vNNd1bSzfrkvG9EDn5AFIG1i9gT0WpTqTbVlVNgw/mp/BlSVToLMzaGXjA9XFLS0SAzegtE4fgw3GvCf6FHZkRch+3RgOJ4Zenx89kjXt5sw06jMtl54ikQs/pGHOW5DfzHZWRMKHu8aTwa/7uu67cRt4zgT076SfsdsGPWfhzZ/71/OXvzFkZCFZkjlPJgabuZmvrqbS56ABf/HPq0ryt0VKAXmXk4mBMrnwSM1sXL29plfexfTE1oEQTi7e3dHO+WKwIl5O4/PXJeQ7SZ7j8HT2fZgA9vJoBT2iLC5DcaLA8vEiDCm3tm1ObCv2dsezUyGRkWEqzlNoVNQewL7Mj5RfyPEmnN8A6gqJMCdipLTofJwt4c/kBZYvPH96KCSN1JbOSbFX1NDcWVUU/Bxl3v6kvQi2KXfhHKj6XX+hBhTh1bnT0Jv4QdjJVfZBuF8akVrjudFBeqTHaZfZ7TMSCBbpC4uoXBtFRcA==')))
+def links():
+ for route,pdf in DOCUMENT_PDFS.items():
+  p=ROOT/route;text=p.read_text()
+  if pdf not in text:text=text.replace('<div class="doc-actions">',f'<div class="doc-actions"><a href="{pdf}" download>Download PDF</a>',1)
+  text=re.sub(r'<button(?: class="light")? onclick="window\.print\(\)">Print(?: / Save PDF)?</button>','<button class="light" onclick="window.print()">Print</button>',text);p.write_text(text)
+def pdfs():
+ for route,pdf in DOCUMENT_PDFS.items():
+  out=ROOT/pdf;out.parent.mkdir(exist_ok=True);HTML(filename=str(ROOT/route),base_url=str(ROOT)).write_pdf(str(out))
+  if out.stat().st_size<1000:raise RuntimeError(str(out))
+ for alias,source in LEGACY.items():shutil.copy2(ROOT/source,ROOT/alias)
+def chunks():
+ tmp=ROOT/'.campaign-repair.zip'
+ with zipfile.ZipFile(tmp,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+  for name in PUBLIC:
+   p=ROOT/name
+   if p.exists():z.write(p,name)
+  for d in ['assets','docs','research']:
+   for p in sorted((ROOT/d).rglob('*')):
+    if p.is_file():z.write(p,p.relative_to(ROOT).as_posix())
+ enc=base64.b64encode(tmp.read_bytes()).decode();size=math.ceil(len(enc)/5);pub=ROOT/'.publish';pub.mkdir(exist_ok=True)
+ for i in range(5):(pub/f'source-{i:02d}').write_text(enc[i*size:(i+1)*size])
+ tmp.unlink()
+def verify():
+ corpus=' '.join((ROOT/r).read_text().lower() for r in DOCUMENT_PDFS)
+ for phrase in ['this is a stretch role','russell does not meet','do not hire russell','reasonable hiring concern']:
+  if phrase in corpus:raise RuntimeError(phrase)
+ for route,pdf in DOCUMENT_PDFS.items():
+  if pdf not in (ROOT/route).read_text() or (ROOT/pdf).read_bytes()[:4]!=b'%PDF':raise RuntimeError(route)
+ for alias in LEGACY:
+  if (ROOT/alias).read_bytes()[:4]!=b'%PDF':raise RuntimeError(alias)
+if __name__=='__main__':migrate();links();pdfs();chunks();verify();print('Strategic fit campaign published.')
